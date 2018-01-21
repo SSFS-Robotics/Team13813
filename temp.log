@@ -1,0 +1,57 @@
+Initialized native services in: C:\Users\Dell\.gradle\native
+The client will now receive all logging from the daemon (pid: 22336). The daemon log file: C:\Users\Dell\.gradle\daemon\4.4.1\daemon-22336.out.log
+Starting 6th build in daemon [uptime: 4 mins 53.821 secs, performance: 100%, no major garbage collections]
+Using 8 worker leases.
+Creating new cache for fileHashes, path E:\Koke_Cacao\Java\WorkSpace\ftc_app\.gradle\4.4.1\fileHashes\fileHashes.bin, access org.gradle.cache.internal.DefaultCacheAccess@6088ec1d
+Starting Build
+Settings evaluated using settings file 'E:\Koke_Cacao\Java\WorkSpace\ftc_app\settings.gradle'.
+Projects loaded. Root project using build file 'E:\Koke_Cacao\Java\WorkSpace\ftc_app\build.gradle'.
+Included projects: [root project 'ftc_app', project ':FtcRobotController', project ':TeamCode']
+Evaluating root project 'ftc_app' using build file 'E:\Koke_Cacao\Java\WorkSpace\ftc_app\build.gradle'.
+Creating new cache for metadata-1.1/results, path C:\Users\Dell\.gradle\caches\transforms-1\metadata-1.1\results.bin, access org.gradle.cache.internal.DefaultCacheAccess@7c2c1707
+Creating new cache for metadata-2.36/module-metadata, path C:\Users\Dell\.gradle\caches\modules-2\metadata-2.36\module-metadata.bin, access org.gradle.cache.internal.DefaultCacheAccess@313a7370
+Creating new cache for metadata-2.36/module-artifact, path C:\Users\Dell\.gradle\caches\modules-2\metadata-2.36\module-artifact.bin, access org.gradle.cache.internal.DefaultCacheAccess@313a7370
+Evaluating project ':FtcRobotController' using build file 'E:\Koke_Cacao\Java\WorkSpace\ftc_app\FtcRobotController\build.gradle'.
+Creating configuration compile
+Creating configuration publish
+Creating configuration provided
+Creating configuration wearApp
+Creating configuration annotationProcessor
+Creating configuration jackPlugin
+Creating configuration androidTestCompile
+Creating configuration androidTestPublish
+Creating configuration androidTestProvided
+Creating configuration androidTestWearApp
+Creating configuration androidTestAnnotationProcessor
+Creating configuration androidTestJackPlugin
+Creating configuration testCompile
+Creating configuration testPublish
+Creating configuration testProvided
+Creating configuration testWearApp
+Creating configuration testAnnotationProcessor
+Creating configuration testJackPlugin
+Creating configuration debugCompile
+Creating configuration debugPublish
+Creating configuration debugProvided
+Creating configuration debugWearApp
+Creating configuration debugAnnotationProcessor
+Creating configuration debugJackPlugin
+Creating configuration testDebugCompile
+Creating configuration testDebugPublish
+Creating configuration testDebugProvided
+Creating configuration testDebugWearApp
+Creating configuration testDebugAnnotationProcessor
+Creating configuration testDebugJackPlugin
+Creating configuration releaseCompile
+Creating configuration releasePublish
+Creating configuration releaseProvided
+Creating configuration releaseWearApp
+Creating configuration releaseAnnotationProcessor
+Creating configuration releaseJackPlugin
+Creating configuration testReleaseCompile
+Creating configuration testReleasePublish
+Creating configuration testReleaseProvided
+Creating configuration testReleaseWearApp
+Creating configuration testReleaseAnnotationProcessor
+Creating configuration testReleaseJackPlugin
+Parsing the SDK, no caching allowed

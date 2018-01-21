@@ -1,0 +1,27 @@
+TODO-Robot:
+    - Adding 4 two-size wheel (be able to balance as well)
+    - Adding another main switch button
+    - A flag holder
+    - a new robot arm and servo
+    - a plate of 13813
+    - a cart used to hold the robot
+    - enough batteries
+    - fast charging station
+
+TODO-Code:
+    - Antonymous mode
+    - Improve TeleOp performance
+
+TODO-Reach:
+    - team website
+    - team video
+    - team gift
+    - team servery
+    - team hand-out
+    - team t-shirt
+    - team voice/shout
+    - team logo
+    - team poster
+    - beest head
+    - team notebook
+    

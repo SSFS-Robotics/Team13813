@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/Blocks.jar"/>
+	<classpathentry kind="lib" path="lib/FtcCommon.jar"/>
+	<classpathentry kind="lib" path="lib/Hardware.jar"/>
+	<classpathentry kind="lib" path="lib/Inspection.jar"/>
+	<classpathentry kind="lib" path="lib/RobotCore.jar"/>
+	<classpathentry kind="lib" path="lib/Vuforia.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
