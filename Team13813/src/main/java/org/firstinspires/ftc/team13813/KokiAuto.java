@@ -44,6 +44,8 @@ public class KokiAuto extends LinearOpMode {
     private float robotY = 0;
     private float robotAngle = 0;
 
+    //added overide, do not know if it should be here
+    @Override
     public void runOpMode() throws InterruptedException {
         setupVuforia();
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);

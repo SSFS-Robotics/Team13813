@@ -143,6 +143,7 @@ public class OpModeCamera extends OpMode {
         data = parameters.flatten();
 
         if (preview == null) {
+            // open camera if not opened
             ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
         }
     }
@@ -154,7 +155,7 @@ public class OpModeCamera extends OpMode {
                 preview = null;
             }
             camera.stopPreview();
-            camera.setPreviewCallback(null);
+            camera.setPreviewCallback(null); // this should be in front of 'camera.stopPreview();' otherwise there will be errors
             if (camera != null) {
                 camera.release();
             }
@@ -162,6 +163,7 @@ public class OpModeCamera extends OpMode {
         }
     }
 
+    // explanation of 0xff: http://zim.logdown.com/posts/397666-0xff-is
     static public int red(int pixel) {
         return (pixel >> 16) & 0xff;
     }
