@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.kokicraft.ftc;
 
 /**
  * Created by Koke_Cacao on 2018/1/20.
  */
 import java.util.ArrayList;
 import java.util.List;
+
+import org.firstinspires.ftc.teamcode.R;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
@@ -27,23 +29,23 @@ import android.view.WindowManager;
 
 public class BallActivity extends Activity implements CvCameraViewListener2 {
     private static final String  TAG = "OCVSample::Activity";
-    private static final int    VIEW_MODE_RGBA   = 0;
-    private static final int    VIEW_MODE_GRAY   = 1;
-    private static final int    VIEW_MODE_CANNY  = 2;
-    private static final int    VIEW_MODE_FEATURES = 5;
-    private int          mViewMode;
-    private Mat          mRgba;
-    private Mat          mIntermediateMat;
-    private Mat          mGray;
-    private Mat                           mHSV;
-    private Mat                           mThresholded;
-    private Mat                           mThresholded2;
-    private Mat                       array255;
-    private Mat                       distance;
-    private MenuItem        mItemPreviewRGBA;
-    private MenuItem        mItemPreviewGray;
-    private MenuItem        mItemPreviewCanny;
-    private MenuItem        mItemPreviewFeatures;
+    public static final int VIEW_MODE_RGBA = 0;
+    public static final int VIEW_MODE_GRAY = 1;
+    public static final int VIEW_MODE_CANNY = 2;
+    public static final int VIEW_MODE_FEATURES = 5;
+    private int mViewMode;
+    private Mat mRgba;
+    private Mat mIntermediateMat;
+    private Mat mGray;
+    private Mat mHSV;
+    private Mat mThresholded;
+    private Mat mThresholded2;
+    private Mat array255;
+    private Mat distance;
+    private MenuItem mItemPreviewRGBA;
+    private MenuItem mItemPreviewGray;
+    private MenuItem mItemPreviewCanny;
+    private MenuItem mItemPreviewFeatures;
     private CameraBridgeViewBase  mOpenCvCameraView;
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -114,9 +116,7 @@ public class BallActivity extends Activity implements CvCameraViewListener2 {
         mGray.release();
         mIntermediateMat.release();
     }
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        final int viewMode = mViewMode;
-        mRgba = inputFrame.rgba();
+    public Mat runOpenCV(Mat mRgba, Integer viewMode) {
         if (viewMode==VIEW_MODE_RGBA) return mRgba;
         List<Mat> lhsv = new ArrayList<Mat>(3);
         Mat circles = new Mat(); // No need (and don't know how) to initialize it.
@@ -181,6 +181,11 @@ public class BallActivity extends Activity implements CvCameraViewListener2 {
             }
         }
         return mRgba;
+    }
+    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+        final int viewMode = mViewMode;
+        mRgba = inputFrame.rgba();
+        return runOpenCV(mRgba, viewMode);
     }
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);

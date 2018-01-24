@@ -17,3 +17,6 @@ android {
     buildToolsVersion '26.0.2'
     sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/'] } }
 }
+dependencies {
+    compile project(path: ':openCVLibrary340')
+}

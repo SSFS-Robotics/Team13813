@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.kokicraft.ftc;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
