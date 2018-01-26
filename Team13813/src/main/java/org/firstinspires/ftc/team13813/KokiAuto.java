@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.HINT;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
@@ -39,7 +41,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "KokiAuto", group = "Autonomous")
+// extends LinearOpModeCamera, but I did not actually use the function of LinearOpModeCamera
+// if you want to use it, you may call yuvImage directly
 public class KokiAuto extends LinearOpModeCamera {
+    private boolean enCoderMode = true;
+    // maybe the number could be wrong
+    private final int encRotation = 1440;
+
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftWheel = null;
+    private DcMotor rightWheel = null;
+    private DcMotor lift = null;
+    String LEFT_WHEEL = "m2";
+    String RIGHT_WHEEL = "m3";
+    String LIFT_MOTOR = "m1";
+    String LEFT_SERVO = "sev1";
+    String RIGHT_SERVO = "sev2";
+
+    double leftWheelPower;
+    double rightWheelPower;
+    double upLiftPower;
+
+    double drive;
+    double turn;
+    double up;
+
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
     private VuforiaTrackables visionTargets;
@@ -51,8 +78,8 @@ public class KokiAuto extends LinearOpModeCamera {
     public static final int VIEW_MODE_CANNY = 2;
     public static final int VIEW_MODE_FEATURES = 5;
 
-    //edit the view mode here
     private Image rgb;
+    //edit the view mode here
     private int mViewMode = VIEW_MODE_FEATURES;
     private Mat mRgba;
     private Mat mIntermediateMat;
@@ -80,6 +107,7 @@ public class KokiAuto extends LinearOpModeCamera {
     //added overide, do not know if it should be here
     @Override
     public void runOpMode() throws InterruptedException {
+        setupMotor();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
         waitForStart();
@@ -113,6 +141,52 @@ public class KokiAuto extends LinearOpModeCamera {
             //idle to let hardware catch up
             idle();
         }
+    }
+
+    private void setupMotor() {
+        leftWheel = hardwareMap.get(DcMotor.class, LEFT_WHEEL);
+        rightWheel = hardwareMap.get(DcMotor.class, RIGHT_WHEEL);
+        lift = hardwareMap.get(DcMotor.class, LIFT_MOTOR);
+
+        if (enCoderMode) {
+            leftWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            leftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        //init mode
+        leftWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        lift.setDirection(DcMotor.Direction.FORWARD);
+    }
+
+    // you should not interrupt this method
+    public void driveWithEncoders(double revolutions, double power) throws InterruptedException {
+        // How far are we to move, in ticks instead of revolutions?
+        int ticks = (int)Math.round(revolutions * encRotation);
+        leftWheelPower = power;
+        rightWheelPower = power;
+
+        // Tell the motors where we are going
+        leftWheel.setTargetPosition(leftWheel.getCurrentPosition() + ticks);
+        rightWheel.setTargetPosition(rightWheel.getCurrentPosition() + ticks);
+
+        // Set them a-going
+        leftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Give them the power level we want them to move at
+        leftWheel.setPower(leftWheelPower);
+        rightWheel.setPower(rightWheelPower);
+
+        // Wait until they are done
+        while (opModeIsActive() && (leftWheel.isBusy() || rightWheel.isBusy())) {
+            telemetry.update();
+            idle();
+        }
+
+        // Always leave the screen looking pretty
+        telemetry.update();
     }
 
     public Mat runOpenCV(Mat mRgba, Integer viewMode) {

@@ -179,6 +179,7 @@ public class BallActivity extends Activity implements CvCameraViewListener2 {
                 Point center= new Point(data2[i], data2[i+1]);
                 Imgproc.ellipse( mRgba, center, new Size((double)data2[i+2], (double)data2[i+2]), 0, 0, 360, new Scalar( 255, 0, 255 ), 4, 8, 0 );
             }
+            System.out.println("Number of circles: " + String.valueOf(data2.length/3));
         }
         return mRgba;
     }

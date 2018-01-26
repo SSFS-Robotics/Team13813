@@ -3,12 +3,15 @@ package org.kokicraft.ftc;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="KokiOpMode", group="TeleOp")
 //@Disabled
 public class KokiOpMode extends OpMode {
+    private boolean enCoderMode = false;
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftWheel = null;
@@ -36,6 +39,12 @@ public class KokiOpMode extends OpMode {
         leftWheel = hardwareMap.get(DcMotor.class, LEFT_WHEEL);
         rightWheel = hardwareMap.get(DcMotor.class, RIGHT_WHEEL);
         lift = hardwareMap.get(DcMotor.class, LIFT_MOTOR);
+
+        if (enCoderMode) {
+            leftWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            leftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         //init mode
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
