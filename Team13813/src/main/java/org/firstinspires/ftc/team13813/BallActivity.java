@@ -1,12 +1,16 @@
-package org.kokicraft.ftc;
+package org.firstinspires.ftc.team13813;
 
 /**
  * Created by Koke_Cacao on 2018/1/20.
  */
-import java.util.ArrayList;
-import java.util.List;
 
-import org.firstinspires.ftc.teamcode.R;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
@@ -16,16 +20,13 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.core.Point;
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.WindowManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BallActivity extends Activity implements CvCameraViewListener2 {
     private static final String  TAG = "OCVSample::Activity";
@@ -121,10 +122,15 @@ public class BallActivity extends Activity implements CvCameraViewListener2 {
         List<Mat> lhsv = new ArrayList<Mat>(3);
         Mat circles = new Mat(); // No need (and don't know how) to initialize it.
         // The function later will do it... (to a 1*N*CV_32FC3)
+
+        //Ｈ：0~180   H/2
+        //Ｓ：0~255   S*255
+        //Ｖ：0~255   V*255
+
         array255.setTo(new Scalar(255));
         Scalar hsv_min = new Scalar(0, 50, 50, 0);
         Scalar hsv_max = new Scalar(6, 255, 255, 0);
-        Scalar hsv_min2 = new Scalar(175, 50, 50, 0);
+        Scalar hsv_min2 = new Scalar(0, 50, 50, 0);
         Scalar hsv_max2 = new Scalar(179, 255, 255, 0);
         //double[] data=new double[3];
         // One way to select a range of colors by Hue

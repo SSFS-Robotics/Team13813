@@ -9,13 +9,13 @@ import android.graphics.Bitmap;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.HINT;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcontroller.internal.LinearOpModeCamera;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -28,6 +28,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -41,18 +42,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "KokiAuto", group = "Autonomous")
-// extends LinearOpModeCamera, but I did not actually use the function of LinearOpModeCamera
-// if you want to use it, you may call yuvImage directly
-public class KokiAuto extends LinearOpModeCamera {
+public class KokiAuto extends LinearOpMode {
+
     private boolean enCoderMode = true;
     // maybe the number could be wrong
     private final int encRotation = 1440;
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtimeAfterStart = new ElapsedTime();
     private DcMotor leftWheel = null;
     private DcMotor rightWheel = null;
     private DcMotor lift = null;
+    private Servo leftServo = null;
+    private Servo rightServo = null;
+
     String LEFT_WHEEL = "m2";
     String RIGHT_WHEEL = "m3";
     String LIFT_MOTOR = "m1";
@@ -65,7 +69,11 @@ public class KokiAuto extends LinearOpModeCamera {
 
     double drive;
     double turn;
-    double up;
+    float up;
+    float down;
+    float armForce;
+    float leftClaw;
+    float rightClaw;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -73,14 +81,12 @@ public class KokiAuto extends LinearOpModeCamera {
     private VuforiaTrackable target;
     private VuforiaTrackableDefaultListener listener;
 
-    public static final int VIEW_MODE_RGBA = 0;
-    public static final int VIEW_MODE_GRAY = 1;
-    public static final int VIEW_MODE_CANNY = 2;
-    public static final int VIEW_MODE_FEATURES = 5;
+    private RelicRecoveryVuMark vuMark = null;
+
+    private Integer height;
+    private Integer width;
 
     private Image rgb;
-    //edit the view mode here
-    private int mViewMode = VIEW_MODE_FEATURES;
     private Mat mRgba;
     private Mat mIntermediateMat;
     private Mat mGray;
@@ -108,6 +114,7 @@ public class KokiAuto extends LinearOpModeCamera {
     @Override
     public void runOpMode() throws InterruptedException {
         setupMotor();
+        setupOpenCV();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
         waitForStart();
@@ -115,7 +122,7 @@ public class KokiAuto extends LinearOpModeCamera {
         // Start tracking the targets
         visionTargets.activate();
 
-        while(opModeIsActive()) {
+        while((opModeIsActive()) && (runtime.time() < 5000)) {
             runVuforia();
 
             // grabbing frames to mRgba for OpenCV
@@ -124,6 +131,8 @@ public class KokiAuto extends LinearOpModeCamera {
             for (int i = 0; i < numImages; i++) {
                 if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
                     rgb = frame.getImage(i);
+                    height = rgb.getHeight();
+                    width = rgb.getWidth();
                     break;
                 }
             }
@@ -132,15 +141,16 @@ public class KokiAuto extends LinearOpModeCamera {
             Mat tmp = new Mat(rgb.getWidth(), rgb.getHeight(), CvType.CV_8UC4);
             Utils.bitmapToMat(bm, tmp);
             mRgba = tmp;
+
             //close the frame, prevents memory leaks and crashing
+            bm.recycle();
+            tmp.release();
             frame.close();
-
-            runOpenCV(mRgba, mViewMode);
-
             telemetry.update();
             //idle to let hardware catch up
             idle();
         }
+
     }
 
     private void setupMotor() {
@@ -158,6 +168,43 @@ public class KokiAuto extends LinearOpModeCamera {
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
         lift.setDirection(DcMotor.Direction.FORWARD);
+    }
+    private void setupVuforia() {
+        if (cameraTesting) {
+            parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+        } else {
+            parameters = new VuforiaLocalizer.Parameters();
+        }
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = CAMERA_DIRECTION;
+        parameters.useExtendedTracking = useExtendedTracking;
+
+        vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
+
+        visionTargets = vuforiaLocalizer.loadTrackablesFromAsset(TRAINED_MODEL);
+        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
+
+        // Setup the target to be tracked
+        target = visionTargets.get(relicID); // 0 corresponds to the wheels target
+        target.setName("ID TEST 0");
+        target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+
+        // Set phone location on robot
+        phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
+
+        // Setup listener and inform it of phone information
+        listener = (VuforiaTrackableDefaultListener) target.getListener();
+        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+    }
+    private void setupOpenCV() {
+        mRgba = new Mat(height, width, CvType.CV_8UC4);
+        mHSV = new Mat(height, width, CvType.CV_8UC4);
+        mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
+        mGray = new Mat(height, width, CvType.CV_8UC1);
+        array255 = new Mat(height, width, CvType.CV_8UC1);
+        distance = new Mat(height, width, CvType.CV_8UC1);
+        mThresholded = new Mat(height, width, CvType.CV_8UC1);
+        mThresholded2 = new Mat(height, width, CvType.CV_8UC1);
     }
 
     // you should not interrupt this method
@@ -189,35 +236,23 @@ public class KokiAuto extends LinearOpModeCamera {
         telemetry.update();
     }
 
-    public Mat runOpenCV(Mat mRgba, Integer viewMode) {
-        if (viewMode==VIEW_MODE_RGBA) return mRgba;
+    public Mat runOpenCV(Mat mRgba) {
         List<Mat> lhsv = new ArrayList<Mat>(3);
-        Mat circles = new Mat(); // No need (and don't know how) to initialize it.
-        // The function later will do it... (to a 1*N*CV_32FC3)
+        Mat circles = new Mat();
         array255.setTo(new Scalar(255));
-        Scalar hsv_min = new Scalar(0, 50, 50, 0);
-        Scalar hsv_max = new Scalar(6, 255, 255, 0);
-        Scalar hsv_min2 = new Scalar(175, 50, 50, 0);
-        Scalar hsv_max2 = new Scalar(179, 255, 255, 0);
-        //double[] data=new double[3];
-        // One way to select a range of colors by Hue
-        Imgproc.cvtColor(mRgba, mHSV, Imgproc.COLOR_RGB2HSV,4);
-        if (viewMode==VIEW_MODE_GRAY) return mHSV;
+
+        Imgproc.cvtColor(mRgba, mHSV, Imgproc.COLOR_RGB2HSV, 4);
+
+        // 1=red, 2=blue
+        Scalar hsv_min = new Scalar(0, 125, 125, 0);
+        Scalar hsv_max = new Scalar(6, 243.859375, 248.15625, 0);
+        Scalar hsv_min2 = new Scalar(185 / 2, 125, 125, 0);
+        Scalar hsv_max2 = new Scalar(274 / 2, 240.0, 246.96875, 0);
         Core.inRange(mHSV, hsv_min, hsv_max, mThresholded);
         Core.inRange(mHSV, hsv_min2, hsv_max2, mThresholded2);
+
         Core.bitwise_or(mThresholded, mThresholded2, mThresholded);
-        /*Core.line(mRgba, new Point(150,50), new Point(202,200), new Scalar(100,10,10)CV_BGR(100,10,10), 3);
-             Core.circle(mRgba, new Point(210,210), 10, new Scalar(100,10,10),3);
-             data=mRgba.get(210, 210);
-             Core.putText(mRgba,String.format("("+String.valueOf(data[0])+","+String.valueOf(data[1])+","+String.valueOf(data[2])+")"),new Point(30, 30) , 3 //FONT_HERSHEY_SCRIPT_SIMPLEX
-                   ,1.0,new Scalar(100,10,10,255),3);*/
-        // Notice that the thresholds don't really work as a "distance"
-        // Ideally we would like to cut the image by hue and then pick just
-        // the area where S combined V are largest.
-        // Strictly speaking, this would be something like sqrt((255-S)^2+(255-V)^2)>Range
-        // But if we want to be "faster" we can do just (255-S)+(255-V)>Range
-        // Or otherwise 510-S-V>Range
-        // Anyhow, we do the following... Will see how fast it goes...
+
         Core.split(mHSV, lhsv); // We get 3 2D one channel Mats
         Mat S = lhsv.get(1);
         Mat V = lhsv.get(2);
@@ -226,37 +261,63 @@ public class KokiAuto extends LinearOpModeCamera {
         S.convertTo(S, CvType.CV_32F);
         V.convertTo(V, CvType.CV_32F);
         Core.magnitude(S, V, distance);
-        Core.inRange(distance,new Scalar(0.0), new Scalar(200.0), mThresholded2);
+        Core.inRange(distance, new Scalar(0.0), new Scalar(200.0), mThresholded2);
         Core.bitwise_and(mThresholded, mThresholded2, mThresholded);
- /*       if (viewMode==VIEW_MODE_CANNY){
-             Imgproc.cvtColor(mThresholded, mRgba, Imgproc.COLOR_GRAY2RGB, 4);
-             return mRgba;
-        }*/
-        // Apply the Hough Transform to find the circles
-        Imgproc.GaussianBlur(mThresholded, mThresholded, new Size(9,9),0,0);
-        Imgproc.HoughCircles(mThresholded, circles, Imgproc.CV_HOUGH_GRADIENT, 2, mThresholded.height()/4, 500, 50, 0, 0);
-        if (viewMode==VIEW_MODE_CANNY){
-            Imgproc.Canny(mThresholded, mThresholded, 500, 250); // This is not needed.
-            // It is just for display
-            Imgproc.cvtColor(mThresholded, mRgba, Imgproc.COLOR_GRAY2RGB, 4);
-            return mRgba;
-        }
-        //int cols = circles.cols();
-        int rows = circles.rows();
-        int elemSize = (int)circles.elemSize(); // Returns 12 (3 * 4bytes in a float)
-        float[] data2 = new float[rows * elemSize/4];
-        if (data2.length>0){
-            circles.get(0, 0, data2); // Points to the first element and reads the whole thing
-            // into data2
-            for(int i=0; i<data2.length; i=i+3) {
-                Point center= new Point(data2[i], data2[i+1]);
-                Imgproc.ellipse( mRgba, center, new Size((double)data2[i+2], (double)data2[i+2]), 0, 0, 360, new Scalar( 255, 0, 255 ), 4, 8, 0 );
-            }
-        }
+        Imgproc.GaussianBlur(mThresholded, mThresholded, new Size(9, 9), 0, 0);
+
+        Imgproc.HoughCircles(mThresholded, circles, Imgproc.CV_HOUGH_GRADIENT, 2, mThresholded.height() / 4, 500, 50, 0, 0);
         return mRgba;
     }
+    private void detectRedBall() {
+        Scalar hsv_min = new Scalar(0, 125, 125, 0);
+        Scalar hsv_max = new Scalar(6, 243.859375, 248.15625, 0);
+        Core.inRange(mHSV, hsv_min, hsv_max, mThresholded);
+        detectBall(mThresholded);
+    }
+    private void detectBlueBall() {
 
+        Scalar hsv_min = new Scalar(185 / 2, 125, 125, 0);
+        Scalar hsv_max = new Scalar(274 / 2, 240.0, 246.96875, 0);
+        Core.inRange(mHSV, hsv_min, hsv_max, mThresholded2);
+        detectBall(mThresholded2);
+    }
+    private void detectBall(Mat mThresholded) {
+        Mat circles = new Mat();
+        array255.setTo(new Scalar(255));
+
+        List<Mat> lhsv = new ArrayList<Mat>(3);
+        Core.split(mHSV, lhsv); // We get 3 2D one channel Mats
+        Mat S = lhsv.get(1);
+        Mat V = lhsv.get(2);
+        Core.subtract(array255, S, S);
+        Core.subtract(array255, V, V);
+        S.convertTo(S, CvType.CV_32F);
+        V.convertTo(V, CvType.CV_32F);
+        Core.magnitude(S, V, distance);
+        Core.inRange(distance, new Scalar(0.0), new Scalar(200.0), mThresholded2);
+        Core.bitwise_and(mThresholded, mThresholded2, mThresholded);
+        Imgproc.GaussianBlur(mThresholded, mThresholded, new Size(9, 9), 0, 0);
+        Imgproc.HoughCircles(mThresholded, circles, Imgproc.CV_HOUGH_GRADIENT, 2, mThresholded.height() / 4, 500, 50, 0, 0);
+        if (circles.cols() > 0) {
+            for (int x=0; x < Math.min(circles.cols(), 5); x++ ) {
+                double circleVec[] = circles.get(0, x);
+                if (circleVec == null) {
+                    break;
+                }
+
+                Point center = new Point((int) circleVec[0], (int) circleVec[1]);
+                int radius = (int) circleVec[2];
+
+                Imgproc.circle(mRgba, center, 3, new Scalar(255, 255, 255), 5);
+                Imgproc.circle(mRgba, center, radius, new Scalar(255, 255, 255), 2);
+            }
+        }
+    }
     private void runVuforia() {
+        detectRelic();
+        detectLocation();
+    }
+    private void detectLocation() {
         // Ask the listener for the latest information on where the robot is
         OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
 
@@ -264,41 +325,6 @@ public class KokiAuto extends LinearOpModeCamera {
         if(latestLocation != null) {
             lastKnownLocation = latestLocation;
         }
-
-
-
-
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(target);
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-            telemetry.addData("Mark:", "%s", vuMark);
-
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)target.getListener()).getPose();
-            telemetry.addData("Pose:", matrixToString(pose));
-
-            if (pose != null) {
-
-                VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-
-                // Extract the rotational components of the target relative to the robot
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-
-            }
-        } else {
-            telemetry.addData("Mark:", "null");
-        }
-
-
-
 
         float[] coordinates = lastKnownLocation.getTranslation().getData();
 
@@ -310,32 +336,31 @@ public class KokiAuto extends LinearOpModeCamera {
         //telemetry.addData("Tracking " + target.getName(), listener.isVisible());
         telemetry.addData("Location:", matrixToString(lastKnownLocation));
     }
-    private void setupVuforia() {
-        if (cameraTesting) {
-            parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+    private void detectRelic() {
+        vuMark = RelicRecoveryVuMark.from(target);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("Mark:", "%s", vuMark);
+            //we do not need this code since we do not need to track position
+//            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)target.getListener()).getPose();
+//            telemetry.addData("Pose:", matrixToString(pose));
+//
+//            if (pose != null) {
+//                VectorF trans = pose.getTranslation();
+//                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+//
+//                // Extract the X, Y, and Z components of the offset of the target relative to the robot
+//                double tX = trans.get(0);
+//                double tY = trans.get(1);
+//                double tZ = trans.get(2);
+//
+//                // Extract the rotational components of the target relative to the robot
+//                double rX = rot.firstAngle;
+//                double rY = rot.secondAngle;
+//                double rZ = rot.thirdAngle;
+//            }
         } else {
-            parameters = new VuforiaLocalizer.Parameters();
+            telemetry.addData("Mark:", "null");
         }
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CAMERA_DIRECTION;
-        parameters.useExtendedTracking = useExtendedTracking;
-
-        vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
-
-        visionTargets = vuforiaLocalizer.loadTrackablesFromAsset(TRAINED_MODEL);
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-
-        // Setup the target to be tracked
-        target = visionTargets.get(relicID); // 0 corresponds to the wheels target
-        target.setName("ID TEST 0");
-        target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-
-        // Set phone location on robot
-        phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
-
-        // Setup listener and inform it of phone information
-        listener = (VuforiaTrackableDefaultListener) target.getListener();
-        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
     }
 
     // Creates a matrix for determining the locations and orientations of objects
@@ -352,4 +377,11 @@ public class KokiAuto extends LinearOpModeCamera {
             return matrix.formatAsTransform();
         return "null";
     }
+
+    // Formats a matrix into a readable string
+    private String formatMatrix(OpenGLMatrix matrix)
+    {
+        return matrix.formatAsTransform();
+    }
+
 }
