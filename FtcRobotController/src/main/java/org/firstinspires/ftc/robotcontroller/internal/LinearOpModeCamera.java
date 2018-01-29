@@ -110,6 +110,7 @@ public class LinearOpModeCamera extends LinearOpMode {
         return cam;
     }
 
+    // use this
     public void startCamera() {
 
         camera = openCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="KokiOpMode", group="TeleOp")
 //@Disabled
 public class KokiOpMode extends OpMode {
-    private boolean enCoderMode = false;
+    private boolean enCoderMode = true;
 
     // Declare OpMode members.
     // 1000 = 1sec
@@ -21,12 +21,16 @@ public class KokiOpMode extends OpMode {
     private DcMotor lift = null;
     private Servo leftServo = null;
     private Servo rightServo = null;
+    private Servo upServo = null;
+    private Servo downServo = null;
 
     String LEFT_WHEEL = "m2";
     String RIGHT_WHEEL = "m3";
     String LIFT_MOTOR = "m1";
     String LEFT_SERVO = "sev1";
     String RIGHT_SERVO = "sev2";
+    String DOWN_SERVO = "sev3";
+    String UP_SERVO = "sev4";
 
     double leftWheelPower;
     double rightWheelPower;
@@ -39,9 +43,15 @@ public class KokiOpMode extends OpMode {
     float armForce;
     float leftClaw;
     float rightClaw;
+    float upServoLeft;
+    float upServoRight;
+    float upServoPosition;
+    float downServoLeft;
+    float downServoRight;
+    float downServoPosition;
 
-    float leftClawInputAdjust = 0;
-    float rightClawInputAdjust = 0;
+    float leftClawInputAdjust = 0.123f;
+    float rightClawInputAdjust = 0.240f;
 
     @Override
     public void init() {
@@ -51,11 +61,13 @@ public class KokiOpMode extends OpMode {
         lift = hardwareMap.get(DcMotor.class, LIFT_MOTOR);
         leftServo = hardwareMap.servo.get(LEFT_SERVO);
         rightServo = hardwareMap.servo.get(RIGHT_SERVO);
+        upServo = hardwareMap.servo.get(UP_SERVO);
+        downServo = hardwareMap.servo.get(DOWN_SERVO);
 
         if (enCoderMode) {
-            leftWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
-            leftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         //init mode
@@ -66,6 +78,7 @@ public class KokiOpMode extends OpMode {
         lift.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("Status", "Initialized Yoooo!");
+        telemetry.addData("Encoder", "null");
     }
 
     @Override
@@ -85,8 +98,16 @@ public class KokiOpMode extends OpMode {
         up = gamepad2.left_trigger;
         down = (gamepad2.left_bumper) ? -1f:0f;
         armForce = (up + down)/2;
-        leftClaw = (gamepad2.left_stick_y+0.5f+leftClawInputAdjust)/2;
-        rightClaw = (gamepad2.right_stick_y+0.5f+rightClawInputAdjust)/2;
+        leftClaw = (gamepad2.left_stick_y+0.5f-leftClawInputAdjust)/2;
+        rightClaw = (gamepad2.right_stick_y+0.5f-rightClawInputAdjust)/2;
+
+//        upServoLeft = gamepad2.right_trigger;
+//        upServoRight = (gamepad2.right_bumper) ? -1f:0f;
+//        upServoPosition = (upServoLeft+upServoRight)/2;
+//
+//        downServoLeft = (gamepad2.y) ? 1f:0f;
+//        downServoRight = (gamepad2.a) ? -1f:0f;
+//        downServoPosition = (downServoLeft+downServoRight)/2;
 
         //calculate data
         leftWheelPower = Range.clip(drive + turn, -1.0, 1.0) ;
@@ -99,22 +120,27 @@ public class KokiOpMode extends OpMode {
         lift.setPower(upLiftPower);
         leftServo.setPosition(leftClaw);
         rightServo.setPosition(rightClaw);
+        upServo.setPosition(upServoPosition);
+        downServo.setPosition(downServoPosition);
 
         if(gamepad2.x) {
-            leftClawInputAdjust = gamepad2.left_stick_y;
-            telemetry.addData("Adjust: ", String.valueOf(leftClawInputAdjust), String.valueOf(rightClawInputAdjust));
+            leftClawInputAdjust = -gamepad2.left_stick_y;
+            telemetry.addData("Adjust: ", String.valueOf(leftClawInputAdjust), ", ", String.valueOf(rightClawInputAdjust));
             telemetry.update();
         }
         if(gamepad2.b) {
-            rightClawInputAdjust = gamepad2.right_stick_y;
-            telemetry.addData("Adjust: ", String.valueOf(leftClawInputAdjust), String.valueOf(rightClawInputAdjust));
+            rightClawInputAdjust = -gamepad2.right_stick_y;
+            telemetry.addData("Adjust: ", String.valueOf(leftClawInputAdjust), ", ", String.valueOf(rightClawInputAdjust));
             telemetry.update();
         }
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "leftPower (%.2f), rightPower (%.2f)", leftWheelPower, rightWheelPower);
-        telemetry.addData("Servo: ", String.valueOf(armForce));
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Motors", "leftPower (%.2f), rightPower (%.2f)", leftWheelPower, rightWheelPower);
+//        telemetry.addData("Servo: ", String.valueOf(armForce));
+//        telemetry.addData("PowerLeftHand: ", String.valueOf(gamepad2.left_stick_y));
+//        telemetry.addData("PowerRightHand: ", String.valueOf(gamepad2.right_stick_y));
+        telemetry.addData("Encoder", lift.getCurrentPosition());
         telemetry.update();
     }
     @Override

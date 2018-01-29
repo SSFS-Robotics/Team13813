@@ -5,17 +5,22 @@ package org.firstinspires.ftc.team13813;
  */
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
+import com.qualcomm.ftccommon.FtcRobotControllerService;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.robotcontroller.internal.*;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -28,7 +33,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -38,11 +46,12 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "KokiAuto", group = "Autonomous")
-public class KokiAuto extends LinearOpMode {
+public class KokiAuto extends LinearOpModeCamera {
 
     private boolean enCoderMode = true;
     // maybe the number could be wrong
@@ -56,12 +65,16 @@ public class KokiAuto extends LinearOpMode {
     private DcMotor lift = null;
     private Servo leftServo = null;
     private Servo rightServo = null;
+    private Servo upServo = null;
+    private Servo downServo = null;
 
     String LEFT_WHEEL = "m2";
     String RIGHT_WHEEL = "m3";
     String LIFT_MOTOR = "m1";
     String LEFT_SERVO = "sev1";
     String RIGHT_SERVO = "sev2";
+    String DOWN_SERVO = "sev3";
+    String UP_SERVO = "sev4";
 
     double leftWheelPower;
     double rightWheelPower;
@@ -74,6 +87,15 @@ public class KokiAuto extends LinearOpMode {
     float armForce;
     float leftClaw;
     float rightClaw;
+    float upServoLeft;
+    float upServoRight;
+    float upServoPosition;
+    float downServoLeft;
+    float downServoRight;
+    float downServoPosition;
+
+    float leftClawInputAdjust = 0.123f;
+    float rightClawInputAdjust = 0.240f;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -83,8 +105,8 @@ public class KokiAuto extends LinearOpMode {
 
     private RelicRecoveryVuMark vuMark = null;
 
-    private Integer height;
-    private Integer width;
+    private Integer height = 45;
+    private Integer width = 80;
 
     private Image rgb;
     private Mat mRgba;
@@ -98,6 +120,21 @@ public class KokiAuto extends LinearOpMode {
 
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity.getContext()) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+                    // Load native library after(!) OpenCV initialization
+                    //System.loadLibrary("mixed_sample");
+//                    mOpenCvCameraView.enableView();
+                } break;
+                default: {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
 
     private static final String VUFORIA_KEY = "AYVp8HD/////AAAAmbWvbJCPAUEivTbJDYmkKlUhuPRlEN5MxRGtGpK68YAYgdTUSycNhLm/AQ2nxYbFwiX+eiXtdzMQg/h0/OO0uHdiq2AGB9qus774oqnqQ2DrzfdUARClxtcnFwJw3Ba/tyvP/gxWjMWetKcwfdDAjD+dilVMrqS7ePsZZPzjSaNB/kjaP3yQRTN1D/050KdnxwKicMkqhulqKv1miESfNBm7qQd3h9FZJoVZumqfytS7pMmqAjvSN7TGcQw7vxw7DJAECvRfoFhuszWNjwcF3rwRsQEXr1jynbJvhh8z4SJdJDqIK4EEroLLSpHVTYj9si4xULph02bAc2fUXDPMS/g7VfFZcgKuzFvZ/eR3ZHCm";
     private static final String TRAINED_MODEL = "RelicVuMark";
@@ -113,61 +150,295 @@ public class KokiAuto extends LinearOpMode {
     //added overide, do not know if it should be here
     @Override
     public void runOpMode() throws InterruptedException {
+
         setupMotor();
-        setupOpenCV();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
-        waitForStart();
 
         // Start tracking the targets
         visionTargets.activate();
 
-        while((opModeIsActive()) && (runtime.time() < 5000)) {
-            runVuforia();
+//        camera = camera.open(1);
+//        startCamera();
+//        setupOpenCV();
 
-            // grabbing frames to mRgba for OpenCV
-            VuforiaLocalizer.CloseableFrame frame = vuforiaLocalizer.getFrameQueue().take(); //takes the frame at the head of the queue
-            long numImages = frame.getNumImages();
-            for (int i = 0; i < numImages; i++) {
-                if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
-                    rgb = frame.getImage(i);
-                    height = rgb.getHeight();
-                    width = rgb.getWidth();
-                    break;
+        telemetry.addData("Status", "initialized");
+        telemetry.update();
+        waitForStart();
+        runtime.reset();
+//        if (imageReady()) {
+//            telemetry.addData("Status", "Image ready");
+//            telemetry.update();
+//            height = yuvImage.getHeight();
+//            width = yuvImage.getWidth();
+//        }
+
+        while (opModeIsActive()) {
+            //fetch data
+//            drive = -gamepad1.left_stick_y; //left analog stick vertical axis
+//            turn = gamepad1.right_stick_x; //left analog stick horizontal axis
+//            up = gamepad2.left_trigger;
+//            down = (gamepad2.left_bumper) ? -1f:0f;
+//            armForce = (up + down)/2;
+//            leftClaw = (gamepad2.left_stick_y+0.5f-leftClawInputAdjust)/2;
+//            rightClaw = (gamepad2.right_stick_y+0.5f-rightClawInputAdjust)/2;
+
+//            upServoLeft = gamepad2.right_trigger;
+//            upServoRight = (gamepad2.right_bumper) ? -1f:0f;
+//            upServoPosition = (upServoLeft+upServoRight)/2;
+
+//            downServoLeft = (gamepad2.y) ? 1f:0f;
+//            downServoRight = (gamepad2.a) ? -1f:0f;
+//            downServoPosition = (downServoLeft+downServoRight)/2;
+
+
+
+            if((opModeIsActive()) && (runtime.seconds() >= 0) && (runtime.seconds() <= 12)) {
+                if ((int)runtime.seconds() == 0) {
+                    leftClaw = -0.5f;
+                    rightClaw = -0.5f;
+//                    leftServo.setPosition(-0.5);
+//                    rightServo.setPosition(-0.5);
                 }
             }
-            Bitmap bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(rgb.getPixels());
-            Mat tmp = new Mat(rgb.getWidth(), rgb.getHeight(), CvType.CV_8UC4);
-            Utils.bitmapToMat(bm, tmp);
-            mRgba = tmp;
+            if((opModeIsActive()) && (runtime.seconds() >= 2) && (runtime.seconds() <= 3)) {
+                if ((int)runtime.seconds() == 2) {
+//                    liftWithEncoder(0.5f);
+                }
+                if ((int)runtime.seconds() == 3) {
+//                    liftWithEncoder(0);
+                }
+            }
+            //left
+            if((opModeIsActive()) && (runtime.seconds() >= 1) && (runtime.seconds() < 3)) {
+                if ((int)runtime.seconds() == 1) {
+                    upServo.setDirection(Servo.Direction.REVERSE);
+                    upServoPosition = 0.5f;
+//                    -0.5f/2 if leftleft
+                }
+            }
+            //up
+            if((opModeIsActive()) && (runtime.seconds() >= 3) && (runtime.seconds() < 4)) {
+                if ((int)runtime.seconds() == 3) {
+                    downServo.setDirection(Servo.Direction.FORWARD);
+                    downServoPosition = 0;
+//                    downServo.setPosition(1);
+                }
+            }
+            //right!!!
+            if((opModeIsActive()) && (runtime.seconds() >= 4) && (runtime.seconds() < 5)) {
+                if ((int)runtime.seconds() == 4) {
+                    downServo.setDirection(Servo.Direction.REVERSE);
+                    downServoPosition = -1/2;
+//                    downServo.setPosition(1);
+                }
+            }
+            //down!!!!
+            if((opModeIsActive()) && (runtime.seconds() >= 5) && (runtime.seconds() < 6)) {
+                if ((int)runtime.seconds() == 5) {
+                    upServo.setDirection(Servo.Direction.REVERSE);
+                    upServoPosition = 0;
+//                    upServo.setPosition(-1);
+                }
+            }
+            //left
+            if((opModeIsActive()) && (runtime.seconds() >= 6) && (runtime.seconds() < 7)) {
+                if ((int)runtime.seconds() == 6) {
+                    upServo.setDirection(Servo.Direction.REVERSE);
+                    upServoPosition = -0.5f/2;
+//                    -0.5f/2 if leftleft
+                }
+            }
+            //up
+            if((opModeIsActive()) && (runtime.seconds() >= 7) && (runtime.seconds() < 8)) {
+                if ((int)runtime.seconds() == 7) {
+                    downServo.setDirection(Servo.Direction.FORWARD);
+                    downServoPosition = 0;
+//                    downServo.setPosition(1);
+                }
+            }
+            //drive
+//            if((opModeIsActive()) && (runtime.seconds() >= 8) && (runtime.seconds() < 10)) {
+//                if ((int)runtime.seconds() == 8) {
+//                    driveWithEncoders(5, 0.5);
+//                }
+//            }
+            if((opModeIsActive()) && (runtime.seconds() >= 10) && (runtime.seconds() <= 11)) {
+                if ((int)runtime.seconds() == 10) {
+//                    liftWithEncoder(-0.5f);
+                }
+                if ((int)runtime.seconds() == 11) {
+//                    liftWithEncoder(0);
+                }
+            }
 
-            //close the frame, prevents memory leaks and crashing
-            bm.recycle();
-            tmp.release();
-            frame.close();
+
+            //calculate data
+            leftWheelPower = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightWheelPower = Range.clip(drive - turn, -1.0, 1.0) ;
+            upLiftPower = Range.clip(armForce, -1.0, 1.0);
+
+            // Send data to wheels
+
+            leftWheel.setPower(leftWheelPower);
+            rightWheel.setPower(rightWheelPower);
+            lift.setPower(upLiftPower);
+            leftServo.setPosition(leftClaw);
+            rightServo.setPosition(rightClaw);
+            upServo.setPosition(upServoPosition);
+            downServo.setPosition(downServoPosition);
+
+            // Show the elapsed game time and wheel power.
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Motors", "leftPower (%.2f), rightPower (%.2f)", leftWheelPower, rightWheelPower);
+//        telemetry.addData("Servo: ", String.valueOf(armForce));
+//        telemetry.addData("PowerLeftHand: ", String.valueOf(gamepad2.left_stick_y));
+//        telemetry.addData("PowerRightHand: ", String.valueOf(gamepad2.right_stick_y));
             telemetry.update();
+            //8:50, panel 1
+//
+//            leftWheel.setPower(leftWheelPower);
+//            rightWheel.setPower(rightWheelPower);
+//            lift.setPower(upLiftPower);
+//            leftServo.setPosition(leftClaw);
+//            rightServo.setPosition(rightClaw);
+//            upServo.setPosition(upServoPosition);
+//            downServo.setPosition(downServoPosition);
+//
+//            telemetry.addData("Status", "looping");
+//            telemetry.addData("Runtime", runtime.seconds());
+//            telemetry.update();
+//            middle();
+//
+//            if((opModeIsActive()) && (runtime.time() > 0) && (runtime.time() < 16)) {
+//                pick();
+//
+//                telemetry.addData("Status", "picking");
+//                telemetry.addData("Runtime", runtime.seconds());
+//                telemetry.update();
+//            }
+//            if((opModeIsActive()) && (runtime.time() > 2) && (runtime.time() < 4)) {
+//                servoDown();
+//                telemetry.addData("Status", "down");
+//                telemetry.update();
+//            }
+//            if((opModeIsActive()) && (runtime.seconds() > 4) && (runtime.seconds() < 6)) {
+//                kickLeft();
+//                telemetry.addData("Status", "kick");
+//                telemetry.update();
+//            }
+//
+//            if((opModeIsActive()) && (runtime.seconds() > 6) && (runtime.seconds() < 8)) {
+//                servoUp();
+//                telemetry.addData("Status", "up");
+//                telemetry.update();
+//            }
+//            if((opModeIsActive()) && (runtime.seconds() > 8) && (runtime.seconds() < 10)) {
+//                kickRight();
+//                telemetry.addData("Status", "back");
+//                telemetry.update();
+//            }
+//
+//            if((opModeIsActive()) && (runtime.seconds() > 10) && (runtime.seconds() < 16)) {
+//                driveWithEncoders(1, 0.5);
+//            }
+//
+//            if((opModeIsActive()) && (runtime.seconds() > 16) && (runtime.seconds() < 20)) {
+//                turnLeft(1, 0.5);
+//            }
+        }
+//        release();
+//        looping();
+    }
+
+    private void looping() throws InterruptedException {
+            while((opModeIsActive()) && (runtime.time() < 5000)) {
+            runVuforia();
+//             grabbing frames to mRgba for OpenCV
+
+//            telemetry.addData("Status", "taking pictures");
+            telemetry.update();
+            vuforiaLocalizer.setFrameQueueCapacity(1);
+            VuforiaLocalizer.CloseableFrame frame = vuforiaLocalizer.getFrameQueue().take(); //takes the frame at the head of the queue
+            long numImages = frame.getNumImages();
+
+//            telemetry.addData("Status", "I got a picture");
+            telemetry.update();
+            for (int i = 0; i < numImages; i++) {
+
+//                telemetry.addData("Status", "Running...");
+                telemetry.update();
+//                if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
+                rgb = frame.getImage(i);
+                height = rgb.getHeight();
+                width = rgb.getWidth();
+                telemetry.addData("Status", String.valueOf(height) + ", " + String.valueOf(width));
+                telemetry.update();
+//                    break;
+//                }
+            }
+
+            // Bitmap.Config.RGB_565
+            // Bitmap.Config.ARGB_8888
+            Bitmap bm = Bitmap.createBitmap(rgb.getBufferWidth()/2, rgb.getBufferHeight()/2, Bitmap.Config.RGB_565);
+//            Integer bmbyte = bm.getByteCount(); //14720 or 14400(height)
+
+            ByteBuffer buffer = rgb.getPixels();
+
+//            Integer bufferbyte = buffer.capacity();//3680
+//            telemetry.addData("Status", "Testing testing..." + bmbyte + ", " + bufferbyte);
+            telemetry.update();
+            bm.copyPixelsFromBuffer(buffer);
+
+
+            telemetry.addData("Status", "Testing good");
+            telemetry.update();
+
+//            Mat tmp = new Mat(rgb.getBufferWidth()/2, rgb.getBufferHeight()/2, CvType.CV_8UC4);
+
+//            Utils.bitmapToMat(bm, tmp);
+//
+            mRgba = bitmapToMatrix(bm);
+
+
+            telemetry.addData("Status", "okay");
+            telemetry.update();
+            //close the frame, prevents memory leaks and crashing
+
+            setupOpenCV();
+            frame.close();
             //idle to let hardware catch up
             idle();
         }
-
     }
 
     private void setupMotor() {
+        //set up hardware map
         leftWheel = hardwareMap.get(DcMotor.class, LEFT_WHEEL);
         rightWheel = hardwareMap.get(DcMotor.class, RIGHT_WHEEL);
         lift = hardwareMap.get(DcMotor.class, LIFT_MOTOR);
+        leftServo = hardwareMap.servo.get(LEFT_SERVO);
+        rightServo = hardwareMap.servo.get(RIGHT_SERVO);
+        upServo = hardwareMap.servo.get(UP_SERVO);
+        downServo = hardwareMap.servo.get(DOWN_SERVO);
 
         if (enCoderMode) {
-            leftWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
-            leftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         //init mode
-        leftWheel.setDirection(DcMotor.Direction.FORWARD);
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.REVERSE);
+        leftWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightWheel.setDirection(DcMotor.Direction.FORWARD);
         lift.setDirection(DcMotor.Direction.FORWARD);
+
+        //right
+        upServo.setDirection(Servo.Direction.FORWARD);
+        //down
+        downServo.setDirection(Servo.Direction.FORWARD);
     }
     private void setupVuforia() {
         if (cameraTesting) {
@@ -197,6 +468,7 @@ public class KokiAuto extends LinearOpMode {
         listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
     }
     private void setupOpenCV() {
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity.getContext(), mLoaderCallback);
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mHSV = new Mat(height, width, CvType.CV_8UC4);
         mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
@@ -234,6 +506,109 @@ public class KokiAuto extends LinearOpMode {
 
         // Always leave the screen looking pretty
         telemetry.update();
+    }
+    public void liftWithEncoder(float power) throws InterruptedException {
+        // How far are we to move, in ticks instead of revolutions?
+        int ticks = (int)Math.round(1 * encRotation);
+        armForce = power;
+
+        // Tell the motors where we are going
+        lift.setTargetPosition(lift.getCurrentPosition() + ticks);
+
+        // Set them a-going
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Give them the power level we want them to move at
+        lift.setPower(armForce);
+
+        // Wait until they are done
+        while (opModeIsActive() && (lift.isBusy() || lift.isBusy())) {
+            telemetry.update();
+            idle();
+        }
+        lift.setPower(0);
+        // Always leave the screen looking pretty
+        telemetry.update();
+    }
+    public void turnRight(double revolutions, double power) throws InterruptedException {
+        // How far are we to move, in ticks instead of revolutions?
+        int ticks = (int)Math.round(revolutions * encRotation);
+        leftWheelPower = power;
+        rightWheelPower = -power;
+
+        // Tell the motors where we are going
+        leftWheel.setTargetPosition(leftWheel.getCurrentPosition() + ticks);
+        rightWheel.setTargetPosition(rightWheel.getCurrentPosition() + ticks);
+
+        // Set them a-going
+        leftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Give them the power level we want them to move at
+        leftWheel.setPower(leftWheelPower);
+        rightWheel.setPower(rightWheelPower);
+
+        // Wait until they are done
+        while (opModeIsActive() && (leftWheel.isBusy() || rightWheel.isBusy())) {
+            telemetry.update();
+            idle();
+        }
+
+        // Always leave the screen looking pretty
+        telemetry.update();
+    }
+    public void turnLeft(double revolutions, double power) throws InterruptedException {
+        // How far are we to move, in ticks instead of revolutions?
+        int ticks = (int)Math.round(revolutions * encRotation);
+        leftWheelPower = -power;
+        rightWheelPower = power;
+
+        // Tell the motors where we are going
+        leftWheel.setTargetPosition(leftWheel.getCurrentPosition() + ticks);
+        rightWheel.setTargetPosition(rightWheel.getCurrentPosition() + ticks);
+
+        // Set them a-going
+        leftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Give them the power level we want them to move at
+        leftWheel.setPower(leftWheelPower);
+        rightWheel.setPower(rightWheelPower);
+
+        // Wait until they are done
+        while (opModeIsActive() && (leftWheel.isBusy() || rightWheel.isBusy())) {
+            telemetry.update();
+            idle();
+        }
+
+        // Always leave the screen looking pretty
+        telemetry.update();
+    }
+    public void kickLeft() {
+        upServo.setDirection(Servo.Direction.REVERSE);
+        upServo.setPosition(-1/2);
+    }
+    public void kickRight() {
+        upServo.setDirection(Servo.Direction.FORWARD);
+        upServo.setPosition(1/2);
+    }
+    public void middle() {
+        upServo.setDirection(Servo.Direction.FORWARD);
+        upServo.setPosition(0);
+    }
+    public void servoDown() {
+        downServo.setPosition(1/2);
+    }
+    public void servoUp() {
+        downServo.setPosition(-1/2);
+    }
+    public void pick() {
+        leftClaw = (-1 +0.5f-0.1f)/2;
+        rightClaw = (-1+0.5f-0.2f)/2;
+    }
+    public void release() {
+        leftClaw = (1 +0.5f-0.1f)/2;
+        rightClaw = (1+0.5f-0.2f)/2;
     }
 
     public Mat runOpenCV(Mat mRgba) {
@@ -384,4 +759,12 @@ public class KokiAuto extends LinearOpMode {
         return matrix.formatAsTransform();
     }
 
+    private Mat bitmapToMatrix(Bitmap bitmap) {
+        Mat tmp = new Mat(height, width, CvType.CV_8UC4);
+
+        telemetry.addData("Status", "Alright");
+        telemetry.update();
+        Utils.bitmapToMat(bitmap, tmp);
+        return tmp;
+    }
 }

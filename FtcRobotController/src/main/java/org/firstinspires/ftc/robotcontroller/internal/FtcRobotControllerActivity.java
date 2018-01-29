@@ -130,7 +130,7 @@ public class FtcRobotControllerActivity extends Activity
   protected ProgrammingModeController programmingModeController;
 
   protected UpdateUI.Callback callback;
-  protected Context context;
+  private static Context context;
   protected Utility utility;
   protected StartResult deviceNameManagerStartResult = new StartResult();
   protected StartResult prefRemoterStartResult = new StartResult();
@@ -164,6 +164,9 @@ public class FtcRobotControllerActivity extends Activity
 
   }
 
+  public static Context getContext() {
+      return context;
+  }
   protected ServiceConnection connection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
