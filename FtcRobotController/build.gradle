@@ -7,11 +7,11 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 19
+        targetSdkVersion 28
     }
 
-    compileSdkVersion 23
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '26.0.3'
 
 
     compileOptions {
@@ -21,6 +21,7 @@ android {
 }
 
 repositories {
+    google() // add google to resolve build tool missing
     flatDir {
         dirs '../libs'
     }

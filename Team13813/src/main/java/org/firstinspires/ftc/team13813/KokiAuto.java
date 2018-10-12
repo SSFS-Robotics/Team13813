@@ -54,7 +54,7 @@ import java.util.List;
 public class KokiAuto extends LinearOpModeCamera {
 
     private boolean enCoderMode = true;
-    // maybe the number could be wrong
+    // maybe the number could be wrong, tetrix:1440, andymark:1120
     private final int encRotation = 1440;
 
     // Declare OpMode members.
@@ -120,7 +120,7 @@ public class KokiAuto extends LinearOpModeCamera {
 
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity.getContext()) {
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(hardwareMap.appContext) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {

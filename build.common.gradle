@@ -101,6 +101,7 @@ android {
 }
 
 repositories {
+    google() // add google to resolve build tool missing
     flatDir {
         dirs rootProject.file('libs')
     }

@@ -14,7 +14,7 @@
 apply from: '../build.common.gradle'
 
 android {
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '26.0.3'
     sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/'] } }
 }
 dependencies {
