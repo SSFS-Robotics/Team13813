@@ -7,6 +7,7 @@ package org.firstinspires.ftc.team13813;
 import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -43,6 +44,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 @Autonomous(name = "KokiAuto", group = "Autonomous")
 public class KokiAuto extends LinearOpModeCamera {
 

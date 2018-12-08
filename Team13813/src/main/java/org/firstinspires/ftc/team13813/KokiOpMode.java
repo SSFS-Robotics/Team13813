@@ -15,7 +15,6 @@ public class KokiOpMode extends OpMode {
 
     // Declare OpMode members.
     // 1000ticks = 1sec
-//    private ElapsedTime runtime = new ElapsedTime(); # no
 
     // motor name configuration
     String LEFT_WHEEL = "m2";
