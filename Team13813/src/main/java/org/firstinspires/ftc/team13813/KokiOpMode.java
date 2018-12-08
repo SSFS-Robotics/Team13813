@@ -14,16 +14,10 @@ public class KokiOpMode extends OpMode {
     private boolean enCoderMode = true;
 
     // Declare OpMode members.
-    // 1000 = 1sec
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftWheel = null;
-    private DcMotor rightWheel = null;
-    private DcMotor lift = null;
-    private Servo leftServo = null;
-    private Servo rightServo = null;
-    private Servo upServo = null;
-    private Servo downServo = null;
+    // 1000ticks = 1sec
+//    private ElapsedTime runtime = new ElapsedTime(); # no
 
+    // motor name configuration
     String LEFT_WHEEL = "m2";
     String RIGHT_WHEEL = "m3";
     String LIFT_MOTOR = "m1";
@@ -32,10 +26,20 @@ public class KokiOpMode extends OpMode {
     String DOWN_SERVO = "sev3";
     String UP_SERVO = "sev4";
 
+    // motor configuration
+    private DcMotor leftWheel = null;
+    private DcMotor rightWheel = null;
+    private DcMotor lift = null;
+    private Servo leftServo = null;
+    private Servo rightServo = null;
+    private Servo upServo = null;
+    private Servo downServo = null;
+
     double leftWheelPower;
     double rightWheelPower;
     double upLiftPower;
 
+    // data storage from gamepad
     double drive;
     double turn;
     float up;
@@ -52,6 +56,26 @@ public class KokiOpMode extends OpMode {
 
     float leftClawInputAdjust = 0.123f;
     float rightClawInputAdjust = 0.240f;
+
+    // variables in the father class
+    // time = 0.0;
+    // gamepad1;
+    // gamepad2;
+    // telemetry;
+    // hardwareMap;
+    // startTime;
+
+    // functions in the father class
+    // OpMode()
+    // init() This method will be called once when the INIT button is pressed.
+    // init_loop() This method will be called repeatedly once when the INIT button is pressed.
+    // start() This method will be called once when this op mode is running.
+    // loop() This method will be called repeatedly in a loop while this op mode is running.
+    // stop() This method will be called when this op mode is first disabled
+    // requestOpModeStop() Shutdown the current OpMode
+    // resetStartTime() set time to 0
+    // internalPreInit(); internalPostInitLoop(); internalPostLoop();
+
 
     @Override
     public void init() {
@@ -77,16 +101,17 @@ public class KokiOpMode extends OpMode {
         rightWheel.setDirection(DcMotor.Direction.FORWARD);
         lift.setDirection(DcMotor.Direction.FORWARD);
 
-        telemetry.addData("Status", "Initialized Yoooo!");
-        telemetry.addData("Encoder", "null");
+        telemetry.addData("Status", "Initialized!");
+        telemetry.addData("Encoder", "NULL");
     }
 
     @Override
     public void init_loop() {
     }
+
     @Override
     public void start() {
-        runtime.reset();
+        resetStartTime(); // reset time in father OpMode
     }
 
     @Override
@@ -135,14 +160,15 @@ public class KokiOpMode extends OpMode {
         }
 
         // Show the elapsed game time and wheel power.
-//        telemetry.addData("Status", "Run Time: " + runtime.toString());
-//        telemetry.addData("Motors", "leftPower (%.2f), rightPower (%.2f)", leftWheelPower, rightWheelPower);
-//        telemetry.addData("Servo: ", String.valueOf(armForce));
-//        telemetry.addData("PowerLeftHand: ", String.valueOf(gamepad2.left_stick_y));
-//        telemetry.addData("PowerRightHand: ", String.valueOf(gamepad2.right_stick_y));
+        telemetry.addData("Status", "Run Time: " + String.valueOf(time));
+        telemetry.addData("Motors", "leftPower (%.2f), rightPower (%.2f)", leftWheelPower, rightWheelPower);
+        telemetry.addData("Servo: ", String.valueOf(armForce));
+        telemetry.addData("PowerLeftHand: ", String.valueOf(gamepad2.left_stick_y));
+        telemetry.addData("PowerRightHand: ", String.valueOf(gamepad2.right_stick_y));
         telemetry.addData("Encoder", lift.getCurrentPosition());
         telemetry.update();
     }
+
     @Override
     public void stop() {
     }

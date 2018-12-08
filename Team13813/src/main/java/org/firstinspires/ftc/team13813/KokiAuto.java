@@ -5,25 +5,19 @@ package org.firstinspires.ftc.team13813;
  */
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
-import com.qualcomm.ftccommon.FtcRobotControllerService;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcontroller.internal.*;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -34,7 +28,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -53,13 +46,14 @@ import java.util.List;
 @Autonomous(name = "KokiAuto", group = "Autonomous")
 public class KokiAuto extends LinearOpModeCamera {
 
-    private boolean enCoderMode = true;
+    private boolean encoderMode = true;
     // maybe the number could be wrong, tetrix:1440, andymark:1120
     private final int encRotation = 1440;
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime runtimeAfterStart = new ElapsedTime();
+
     private DcMotor leftWheel = null;
     private DcMotor rightWheel = null;
     private DcMotor lift = null;
@@ -155,17 +149,20 @@ public class KokiAuto extends LinearOpModeCamera {
         setupVuforia();
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
 
-        // Start tracking the targets
+        // Start tracking the targets in Vuforia
         visionTargets.activate();
 
 //        camera = camera.open(1);
 //        startCamera();
 //        setupOpenCV();
 
-        telemetry.addData("Status", "initialized");
-        telemetry.update();
-        waitForStart();
-        runtime.reset();
+        // you can try to use .addLine
+        telemetry.addData("Status", "initialized"); // add data to driver station
+        telemetry.update(); // update the message
+        waitForStart(); // waiting for start, the program will stop here until we press start
+
+        runtime.reset(); // reset the time elipsed
+
 //        if (imageReady()) {
 //            telemetry.addData("Status", "Image ready");
 //            telemetry.update();
@@ -278,11 +275,12 @@ public class KokiAuto extends LinearOpModeCamera {
             rightWheelPower = Range.clip(drive - turn, -1.0, 1.0) ;
             upLiftPower = Range.clip(armForce, -1.0, 1.0);
 
-            // Send data to wheels
-
+            // send data to wheels
             leftWheel.setPower(leftWheelPower);
             rightWheel.setPower(rightWheelPower);
             lift.setPower(upLiftPower);
+
+            // send data to servos
             leftServo.setPosition(leftClaw);
             rightServo.setPosition(rightClaw);
             upServo.setPosition(upServoPosition);
@@ -422,7 +420,7 @@ public class KokiAuto extends LinearOpModeCamera {
         upServo = hardwareMap.servo.get(UP_SERVO);
         downServo = hardwareMap.servo.get(DOWN_SERVO);
 
-        if (enCoderMode) {
+        if (encoderMode) {
             lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
             lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
