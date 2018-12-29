@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-import team13813.Configuration;
+import team13813.util.Configuration;
 import team13813.state.GoldPositions;
 
 public class VisionManager {
@@ -17,7 +17,7 @@ public class VisionManager {
 
         vision = new MasterVision(parameters, hardwareMap, true, infer);
         vision.init();
-    }//facing
+    }
 
     public void start() {
         vision.enable();

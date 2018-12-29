@@ -1,4 +1,4 @@
-package team13813;
+package team13813.util;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 

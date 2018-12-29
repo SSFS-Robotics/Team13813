@@ -34,13 +34,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
-import team13813.Configuration;
+import team13813.util.Configuration;
 import team13813.io.GamepadManager;
 import team13813.motion.MotionManager;
 import team13813.state.State;
-import team13813.util.FileSerialization;
+import team13813.io.FileSerialization;
 import team13813.state.GoldPositions;
 import team13813.vision.VisionManager;
 
@@ -56,6 +57,7 @@ import team13813.vision.VisionManager;
  */
 @TeleOp(name = "KokiAutoNext", group = "OpMode")
 @Disabled
+// TODO: WARNING - When there is an issue updating the opMode, try: Build->Clean Project
 public class KokiAutoNext extends OpMode {
     // Declare OpMode members.
     // 1000ticks = 1sec
@@ -105,8 +107,8 @@ public class KokiAutoNext extends OpMode {
         visionManager = new VisionManager(hardwareMap, Configuration.INFER);
         motionManager = new MotionManager(telemetry, hardwareMap);
         gamepadManager = new GamepadManager(telemetry);
-        telemetry.update();
         visionManager.start();
+        telemetry.update();
     }
 
     @Override
@@ -126,15 +128,18 @@ public class KokiAutoNext extends OpMode {
 
         long timeElapsed = System.currentTimeMillis() - lStartTime;
         telemetry.addData("Record", "timeElapsed = %d", timeElapsed);
+        telemetry.update();
     }
 
     @Override
     public void start() {
+        if (Configuration.getGoldPosition() == GoldPositions.UNKNOWN) throw new InvalidParameterException("GoldPositions cannot be 'UNKNOWN'");
         visionManager.disable();
         resetStartTime();
         if (Configuration.getState() == State.AUTONOMOUS) {
             Configuration.gamepadsTimeStream = (ArrayList<ArrayList<Gamepad>>) FileSerialization.load(hardwareMap.appContext, Configuration.getFileName());
         }
+        telemetry.update();
     }
 
     @Override
@@ -146,14 +151,15 @@ public class KokiAutoNext extends OpMode {
             gamepads.add(gamepad1);
             gamepads.add(gamepad2);
             savingGamepadStream.add(gamepads);
-        } else if (Configuration.gamepadsTimeStream.size() >0) {
+            gamepadManager.update(gamepad1, gamepad2);
+        } else if (Configuration.getState() == State.AUTONOMOUS && Configuration.gamepadsTimeStream.size() >0) {
             Gamepad fakeGamepad1 = Configuration.gamepadsTimeStream.get(0).get(0);
             Gamepad fakeGamepad2 = Configuration.gamepadsTimeStream.get(0).get(1);
-            Configuration.gamepadsTimeStream.remove(0);
             gamepadManager.update(fakeGamepad1, fakeGamepad2);
+            Configuration.gamepadsTimeStream.remove(0);
         }
-
         motionManager.update(gamepadManager);
+        telemetry.update();
     }
 
     @Override
@@ -161,6 +167,8 @@ public class KokiAutoNext extends OpMode {
         if (Configuration.getState() == State.RECORDING) {
             FileSerialization.save(hardwareMap.appContext, Configuration.getFileName(), savingGamepadStream);
         }
+        telemetry.addData("Time", "time = %d", time);
+        telemetry.update();
     }
 
     private static GoldPositions calculateLastKnown(ArrayList<GoldPositions> positionStream) {

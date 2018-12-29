@@ -12,8 +12,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import team13813.Configuration;
+import team13813.util.Configuration;
 import team13813.io.GamepadManager;
 
 public class MotionManager {
@@ -115,18 +116,22 @@ public class MotionManager {
 
 
         //touch
-//        if (digitalTouch.getState() == true) {
-//            telemetry.addData("Digital Touch", "Is Not Pressed");
-//        } else {
-//            telemetry.addData("Digital Touch", "Is Pressed");
-//        }
+        if (touch.getState()) {
+            telemetry.addData("Touch", "Is Not Pressed");
+        } else {
+            telemetry.addData("Touch", "Is Pressed");
+        }
 
 
         //distance
-//        telemetry.addData("range", String.format("%.01f mm", leftDistance.getDistance(DistanceUnit.MM)));
-//        telemetry.addData("range", String.format("%.01f cm", leftDistance.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("range", String.format("%.01f m", leftDistance.getDistance(DistanceUnit.METER)));
-//        telemetry.addData("range", String.format("%.01f in", leftDistance.getDistance(DistanceUnit.INCH)));
+//        telemetry.addData("Distance", String.format("%.01f mm", leftDistance.getDistance(DistanceUnit.MM)));
+        telemetry.addData("Distance", String.format("%.01f cm", leftDistance.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("Distance", String.format("%.01f m", leftDistance.getDistance(DistanceUnit.METER)));
+//        telemetry.addData("Distance", String.format("%.01f in", leftDistance.getDistance(DistanceUnit.INCH)));
+//        telemetry.addData("Distance", String.format("%.01f mm", rightDistance.getDistance(DistanceUnit.MM)));
+        telemetry.addData("Distance", String.format("%.01f cm", rightDistance.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("Distance", String.format("%.01f m", rightDistance.getDistance(DistanceUnit.METER)));
+//        telemetry.addData("Distance", String.format("%.01f in", rightDistance.getDistance(DistanceUnit.INCH)));
 
         // TODO: read sensor, encoder
         //color

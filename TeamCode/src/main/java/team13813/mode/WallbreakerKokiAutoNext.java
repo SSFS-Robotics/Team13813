@@ -2,12 +2,12 @@ package team13813.mode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import team13813.Configuration;
+import team13813.util.Configuration;
 import team13813.state.Facing;
 import team13813.state.State;
 import team13813.state.Team;
 
-@Autonomous(name = "WallbreakerKokiAutoNext", group = "OpMode")
+@Autonomous(name = "WallbreakerKokiAutoNext", group = "Autonomous")
 public class WallbreakerKokiAutoNext extends KokiAutoNext {
 
     @Override
