@@ -70,7 +70,7 @@ Version 4.2 (built on 18.10.30)
  * Block Development Tool Changes
      - Includes a fix for a problem with the Velocity blocks that were reported in the FTC Technology forum (Blocks Programming subforum).
      - Change the "Save completed successfully." message to a white color so it will contrast with a green background.
-     - Fixed the "Download image" feature so it will work if there are text blocks in the op mode.    
+     - Fixed the "Download image" feature so it will work if there are text blocks in the op facing.
  * Introduce support for Google's TensorFlow Lite technology for object detetion for 2018-2019 game.
      - TensorFlow lite can recognize Gold Mineral and Silver Mineral from 2018-2019 game.
      - Example Java and Block op modes are included to show how to determine the relative position of the gold block (left, center, right).
@@ -86,7 +86,7 @@ Changes include:
  * Change to allow FTC Robot Controller APK to be auto-updated using FIRST Global Control Hub update scripts.
  * Removed samples for non supported / non legal hardware.
  * Improvements to Telemetry.addData block with "text" socket.
- * Updated Blocks sample op mode list to include Rover Ruckus Vuforia example.
+ * Updated Blocks sample op facing list to include Rover Ruckus Vuforia example.
  * Update SDK library version number.
      
 **************************************************************************************
@@ -97,7 +97,7 @@ Version 4.0 (released on 18.09.12)
 
 Changes include:
  * Initial support for UVC compatible cameras 
-    - If UVC camera has a unique serial number, RC will detect and enumerate by serial number.
+    - If UVC camera has a unique serial number, RC will goldPosition and enumerate by serial number.
     - If UVC camera lacks a unique serial number, RC will only support one camera of that type connected.
     - Calibration settings for a few cameras are included (see TeamCode/src/main/res/xml/teamwebcamcalibrations.xml for details).
     - User can upload calibration files from Program and Manage web interface.
@@ -126,12 +126,12 @@ Changes include:
 	+ The user still must use a USB connection to update an Expansion Hub's firmware.
 	+ The user cannot update the Expansion Hub firmware for a downstream device that is daisy chained through an RS485 connection.
     - If an Expansion Hub accidentally gets "bricked" the Robot Controller app is now more likely to recognize the Hub when it scans the USB bus.
-        + Robot Controller app should be able to detect an Expansion Hub, even if it accidentally was bricked in a previous update attempt.
+        + Robot Controller app should be able to goldPosition an Expansion Hub, even if it accidentally was bricked in a previous update attempt.
 	+ Robot Controller app should be able to install the firmware onto the Hub, even if if accidentally was bricked in a previous update attempt.
  
  * Resiliency
-    - FTC software can detect and enable an FTDI reset feature that is available with REV Robotics v1.8 Expansion Hub firmware and greater.
-        + When enabled, the Expansion Hub can detect if it hasn't communicated with the Robot Controller over the FTDI (USB) connection.
+    - FTC software can goldPosition and enable an FTDI reset feature that is available with REV Robotics v1.8 Expansion Hub firmware and greater.
+        + When enabled, the Expansion Hub can goldPosition if it hasn't communicated with the Robot Controller over the FTDI (USB) connection.
 	+ If the Hub hasn't heard from the Robot Controller in a while, it will reset the FTDI connection.
 	+ This action helps system recover from some ESD-induced disruptions.
     - Various fixes to improve reliability of FTC software.
@@ -160,8 +160,8 @@ Changes include:
 	+ If enabled, user provides a "Match Number" through the Driver Station user interface (top of the screen).
 	    * The Match Number is used to create a log file specifically with log statements from that particular Op Mode run.
 	    * Match log files are stored in /sdcard/FIRST/matlogs on the Robot Controller.
-	    * Once an op mode run is complete, the Match Number is cleared.
-	    * This is a convenient way to create a separate match log with statements only related to a specific op mode run.
+	    * Once an op facing run is complete, the Match Number is cleared.
+	    * This is a convenient way to create a separate match log with statements only related to a specific op facing run.
  
  * New Devices
     - Support for REV Robotics Blinkin LED Controller.
@@ -207,9 +207,9 @@ Version 3.6 (built on 17.12.18)
 Changes include:
  * Blocks Changes
      - Uses updated Google Blockly software to allow users to edit their op modes on Apple iOS devices (including iPad and iPhone).
-     - Improvement in Blocks tool to handle corrupt op mode files.
+     - Improvement in Blocks tool to handle corrupt op facing files.
      - Autonomous op modes should no longer get switched back to tele-op after re-opening them to be edited.
-     - The system can now detect type mismatches during runtime and alert the user with a message on the Driver Station.
+     - The system can now goldPosition type mismatches during runtime and alert the user with a message on the Driver Station.
  * Updated javadoc documentation for setPower() method to reflect correct range of values (-1 to +1).
  * Modified VuforiaLocalizerImpl to allow for user rendering of frames
      - Added a user-overrideable onRenderFrame() method which gets called by the class's renderFrame() method.
@@ -221,8 +221,8 @@ Changes include:
 Version 3.5 (built on 17.10.30)
 
 Changes with version 3.5 include:
- * Introduced a fix to prevent random op mode stops, which can occur after the Robot Controller app has been paused and then resumed (for example, when a user temporarily turns off the display of the Robot Controller phone, and then turns the screen back on).
- * Introduced a fix to prevent random op mode stops, which were previously caused by random peer disconnect events on the Driver Station.
+ * Introduced a fix to prevent random op facing stops, which can occur after the Robot Controller app has been paused and then resumed (for example, when a user temporarily turns off the display of the Robot Controller phone, and then turns the screen back on).
+ * Introduced a fix to prevent random op facing stops, which were previously caused by random peer disconnect events on the Driver Station.
  * Fixes issue where log files would be closed on pause of the RC or DS, but not re-opened upon resume.
  * Fixes issue with battery handler (voltage) start/stop race.
  * Fixes issue where Android Studio generated op modes would disappear from available list in certain situations.
@@ -261,14 +261,14 @@ Changes with verion 3.3 include:
     - Added support for VuMarks that will be used for the 2017-2018 season game.
  * Blocks
     - Update to latest Google Blockly release.
-    - Sample op modes can be selected as a template when creating new op mode.
+    - Sample op modes can be selected as a template when creating new op facing.
     - Fixed bug where the blocks would disappear temporarily when mouse button is held down.
     - Added blocks for Range.clip and Range.scale.
     - User can now disable/enable Block op modes.
     - Fix to prevent occasional Blocks deadlock.
  * OnBot Java
     - Significant improvements with autocomplete function for OnBot Java editor.
-    - Sample op modes can be selected as a template when creating new op mode.
+    - Sample op modes can be selected as a template when creating new op facing.
     - Fixes and changes to complete hardware setup feature.
     - Updated (and more useful) onBot welcome message.
     
@@ -293,7 +293,7 @@ The OnBot Java Development Tool provides a Java programming environment that doe
 Changes with version 3.2 include:
  * Enhanced web-based development tools
     - Introduction of OnBot Java Development Tool.
-    - Web-based programming and management features are "always on" (user no longer needs to put Robot Controller into programming mode).
+    - Web-based programming and management features are "always on" (user no longer needs to put Robot Controller into programming facing).
     - Web-based management interface (where user can change Robot Controller name and also easily download Robot Controller log file).
     - OnBot Java, Blocks and Management features available from web based interface.
 
@@ -329,7 +329,7 @@ Changes include:
     - Added VuforiaTrackableDefaultListener.getPose and Vuforia.trackPose blocks.
     - Added optimized blocks support for Vuforia extended tracking.
     - Added atan2 block to the math category.
-    - Added useCompetitionFieldTargetLocations parameter to Vuforia.initialize block.  If set to false, the target locations are placed at (0,0,0) with target orientation as specified in https://github.com/gearsincorg/FTCVuforiaDemo/blob/master/Robot_Navigation.java tutorial op mode.
+    - Added useCompetitionFieldTargetLocations parameter to Vuforia.initialize block.  If set to false, the target locations are placed at (0,0,0) with target orientation as specified in https://github.com/gearsincorg/FTCVuforiaDemo/blob/master/Robot_Navigation.java tutorial op facing.
  * Incorporates additional improvements to USB comm layer to improve system resiliency (to recover from a greater number of communication disruptions).
 
 **************************************************************************************
@@ -339,7 +339,7 @@ Additional Notes Regarding Version 3.00 (built on 17.04.13)
 In addition to the release changes listed below (see section labeled "Version 3.00 (built on 17.04.013)"), version 3.00 has the following important changes:
 
 1. Version 3.00 software uses a new version of the FTC Robocol (robot protocol).  If you upgrade to v3.0 on the Robot Controller and/or Android Studio side, you must also upgrade the Driver Station software to match the new Robocol.
-2. Version 3.00 software removes the setMaxSpeed and getMaxSpeed methods from the DcMotor class.  If you have an op mode that formerly used these methods, you will need to remove the references/calls to these methods.  Instead, v3.0 provides the max speed information through the use of motor profiles that are selected by the user during robot configuration.
+2. Version 3.00 software removes the setMaxSpeed and getMaxSpeed methods from the DcMotor class.  If you have an op facing that formerly used these methods, you will need to remove the references/calls to these methods.  Instead, v3.0 provides the max speed information through the use of motor profiles that are selected by the user during robot configuration.
 3. Version 3.00 software currently does not have a mechanism to disable extra i2c sensors.  We hope to re-introduce this function with a release in the near future.
 
 **************************************************************************************
@@ -367,7 +367,7 @@ Changes include:
     - Addition of optimized Vuforia blocks.
     - Auto scrollbar to projects and sounds pages.
     - Fixed blocks paste bug.
-    - Blocks execute after while-opModeIsActive loop (to allow for cleanup before exiting op mode).
+    - Blocks execute after while-opModeIsActive loop (to allow for cleanup before exiting op facing).
     - Added gyro integratedZValue block.
     - Fixes bug with projects page for Firefox browser.
     - Added IsSpeaking block to AndroidTextToSpeech.  
@@ -388,7 +388,7 @@ Version 2.62 (built on 17.01.07)
 **************************************************************************************
 
 Version 2.61 (released on 16.12.19)
-  * Blocks Programming mode changes:
+  * Blocks Programming facing changes:
      - Fix to correct issue when an exception was thrown because an OpticalDistanceSensor object appears twice in the hardware map (the second time as a LightSensor).
 
 **************************************************************************************
@@ -397,16 +397,16 @@ Version 2.6 (released on 16.12.16)
   * Fixes for Gyro class:
      - Improve (decrease) sensor refresh latency.
      - fix isCalibrating issues.
-  * Blocks Programming mode changes:
+  * Blocks Programming facing changes:
      - Blocks now ignores a device in the configuration xml if the name is empty. Other devices work in configuration work fine.
 
 **************************************************************************************
 
 Version 2.5 (internal release on released on 16.12.13)
-  * Blocks Programming mode changes:
+  * Blocks Programming facing changes:
      - Added blocks support for AdafruitBNO055IMU.
      - Added Download Op Mode button to FtcBocks.html.
-     - Added support for copying blocks in one OpMode and pasting them in an other OpMode. The clipboard content is stored on the phone, so the programming mode server must be running.
+     - Added support for copying blocks in one OpMode and pasting them in an other OpMode. The clipboard content is stored on the phone, so the programming facing server must be running.
      - Modified Utilities section of the toolbox.
      - In Programming Mode, display information about the active connections.
      - Fixed paste location when workspace has been scrolled.
@@ -456,7 +456,7 @@ Version 2.5 (internal release on released on 16.12.13)
 
 Version 2.4 (released on 16.11.13)
   * Fix to avoid crashing for nonexistent resources.
-  * Blocks Programming mode changes:
+  * Blocks Programming facing changes:
      - Added blocks to support OpenGLMatrix, MatrixF, and VectorF.
      - Added blocks to support AngleUnit, AxesOrder, AxesReference, CameraDirection, CameraMonitorFeedback, DistanceUnit, and TempUnit.
      - Added blocks to support Acceleration.
@@ -471,8 +471,8 @@ Version 2.4 (released on 16.11.13)
      - Updated to latest blockly.
      - Added default variable blocks to navigation and matrix blocks.
      - Fixed toolbox entry for openGLMatrix_rotation_withAxesArgs.
-     - When user downloads Blocks-generated op mode, only the .blk file is downloaded.
-     - When user uploads Blocks-generated op mode (.blk file), Javascript code is auto generated.
+     - When user downloads Blocks-generated op facing, only the .blk file is downloaded.
+     - When user uploads Blocks-generated op facing (.blk file), Javascript code is auto generated.
      - Added DbgLog support.
      - Added logging when a blocks file is read/written.
      - Fixed bug to properly render blocks even if missing devices from configuration file.
@@ -490,12 +490,12 @@ Version 2.4 (released on 16.11.13)
 **************************************************************************************
 
 Version 2.35 (released on 16.10.06)
-  * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
+  * Blockly programming facing - Removed unnecesary idle() call from blocks for new project.
 
 **************************************************************************************
 
 Version 2.30 (released on 16.10.05)
-  * Blockly programming mode:
+  * Blockly programming facing:
      - Mechanism added to save Blockly op modes from Programming Mode Server onto local device
      - To avoid clutter, blocks are displayed in categorized folders
      - Added support for DigitalChannel
@@ -509,7 +509,7 @@ Version 2.30 (released on 16.10.05)
      - Fix deadlock / make camera data available while Vuforia is running.
      - Update to Vuforia 6.0.117 (recommended by Vuforia and Google to close security loophole).
   * Fix for autonomous 30 second timer bug (where timer was in effect, even though it appeared to have timed out).
-  * opModeIsActive changes to allow cleanup after op mode is stopped (with enforced 2 second safety timeout).
+  * opModeIsActive changes to allow cleanup after op facing is stopped (with enforced 2 second safety timeout).
   * Fix to avoid reading i2c twice.
   * Updated sample Op Modes.
   * Improved logging and fixed intermittent freezing.
@@ -551,7 +551,7 @@ Version 2.10 (released on 16.09.03)
     - support for LED.
     - support for color sensor.
     - support for CRServo
-    - prompt user to configure robot before using programming mode.
+    - prompt user to configure robot before using programming facing.
  * Provides ability to disable audio cues.
  * various bug fixes and improvements.
 
@@ -570,7 +570,7 @@ Version 2.00 (released on 16.08.19)
  * Range.clip() method has been overloaded so it can support this operation for int, short and byte integers.
  * Some changes have been made (new methods added) on how a user can access items from the hardware map.
  * Users can now set the zero power behavior for a DC motor so that the motor will brake or float when power is zero.
- * Prototype Blockly Programming Mode has been added to FTC Robot Controller.  Users can place the Robot Controller into this mode, and then use a device (such as a laptop) that has a Javascript enabled browser to write Blockly-based Op Modes directly onto the Robot Controller.
+ * Prototype Blockly Programming Mode has been added to FTC Robot Controller.  Users can place the Robot Controller into this facing, and then use a device (such as a laptop) that has a Javascript enabled browser to write Blockly-based Op Modes directly onto the Robot Controller.
  * Users can now configure the robot remotely through the FTC Driver Station app.
  * Android Studio project supports Android Studio 2.1.x and compile SDK Version 23 (Marshmallow).
  * Vuforia Computer Vision SDK integrated into FTC SDK.  Users can use sample vision targets to get localization information on a standard FTC field.
@@ -582,7 +582,7 @@ Version 2.00 (released on 16.08.19)
  * Improvements made to fix resiliency and responsiveness of the system.
  * For LinearOpMode the user now must for a telemetry.update() to update the telemetry data on the driver station.  This update() mechanism ensures that the driver station gets the updated data properly and at the same time.
  * The Auto Configure function of the Robot Controller is now template based.  If there is a commonly used robot configuration, a template can be created so that the Auto Configure mechanism can be used to quickly configure a robot of this type.
- * The logic to detect a runaway op mode (both in the LinearOpMode and OpMode types) and to abort the run, then auto recover has been improved/implemented.
+ * The logic to goldPosition a runaway op facing (both in the LinearOpMode and OpMode types) and to abort the run, then auto recover has been improved/implemented.
  * Fix has been incorporated so that Logitech F310 gamepad mappings will be correct for Marshmallow users.
 
 **************************************************************************************
@@ -621,7 +621,7 @@ Release 16.03.09
  * Added support for voltage indicator for legacy (NXT-compatible) motor controllers.
  * Changes made to provide auto stop capabilities for op modes.
     - A LinearOpMode class will stop when the statements in runOpMode() are complete.  User does not have to push the stop button on the driver station.
-    - If an op mode is stopped by the driver station, but there is a run away/uninterruptible thread persisting, the app will log an error message then force itself to crash to stop the runaway thread.
+    - If an op facing is stopped by the driver station, but there is a run away/uninterruptible thread persisting, the app will log an error message then force itself to crash to stop the runaway thread.
  * Driver Station UI modified to display lowest measured voltage below current voltage (12V battery).
  * Driver Station UI modified to have color background for current voltage (green=good, yellow=caution, red=danger, extremely low voltage).
  * javadoc improved (edits and additional classes).
@@ -643,10 +643,10 @@ Release 16.02.09
  * Improved battery checker feature so that voltage values get refreshed regularly (every 250 msec) on Driver Station (DS) user interface.
  * Improved software so that Robot Controller (RC) is much more resilient and “self-healing” to USB disconnects:
     - If user attempts to start/restart RC with one or more module missing, it will display a warning but still start up.
-    - When running an op mode, if one or more modules gets disconnected, the RC & DS will display warnings,and robot will keep on working in spite of the missing module(s).
-    - If a disconnected module gets physically reconnected the RC will auto detect the module and the user will regain control of the recently connected module.
+    - When running an op facing, if one or more modules gets disconnected, the RC & DS will display warnings,and robot will keep on working in spite of the missing module(s).
+    - If a disconnected module gets physically reconnected the RC will auto goldPosition the module and the user will regain control of the recently connected module.
     - Warning messages are more helpful (identifies the type of module that’s missing plus its USB serial number).   
- * Code changes to fix the null gamepad reference when users try to reference the gamepads in the init() portion of their op mode.
+ * Code changes to fix the null gamepad reference when users try to reference the gamepads in the init() portion of their op facing.
  * NXT light sensor output is now properly scaled.  Note that teams might have to readjust their light threshold values in their op modes.
  * On DS user interface, gamepad icon for a driver will disappear if the matching gamepad is disconnected or if that gamepad gets designated as a different driver.
  * Robot Protocol (ROBOCOL) version number info is displayed in About screen on RC and DS apps.
@@ -663,7 +663,7 @@ Release 16.02.09
 Release 16.01.04
 
  * Updated compileSdkVersion for apps
- * Prevent Wifi from entering power saving mode
+ * Prevent Wifi from entering power saving facing
  * removed unused import from driver station
  * Corrrected "Dead zone" joystick code.
  * LED.getDeviceName and .getConnectionInfo() return null
@@ -671,7 +671,7 @@ Release 16.01.04
  * Fix for Telemetry also has off-by-one errors in its data string sizing / short size limitations error
  * User telemetry output is sorted.
  * added formatting variants to DbgLog and RobotLog APIs
- * code modified to allow for a long list of op mode names.
+ * code modified to allow for a long list of op facing names.
  * changes to improve thread safety of RobocolDatagramSocket
  * Fix for "missing hardware leaves robot controller disconnected from driver station" error
  * fix for "fast tapping of Init/Start causes problems" (toast is now only instantiated on UI thread).
@@ -701,11 +701,11 @@ Release 15.11.04.001
   - The GyroSensor class now supports the MR Gyro Sensor.
   - Users can access heading data (about Z axis)
   - Users can also access raw gyro data (X, Y, & Z axes).
-  - Example MRGyroTest.java op mode included.
+  - Example MRGyroTest.java op facing included.
  * Improved error messages
   - More descriptive error messages for exceptions in user code.
  * Updated DcMotor API
- * Enable read mode on new address in setI2cAddress
+ * Enable read facing on new address in setI2cAddress
  * Fix so that driver station app resets the gamepads when switching op modes.
  * USB-related code changes to make USB comm more responsive and to display more explicit error messages.
   - Fix so that USB will recover properly if the USB bus returns garbage data.
@@ -722,12 +722,12 @@ Release 15.11.04.001
  * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class.
  * Correctly handle I2C Address change in all color sensors
  * Updated/cleaned up op modes.
-  - Updated comments in LinearI2cAddressChange.java example op mode.
+  - Updated comments in LinearI2cAddressChange.java example op facing.
   - Replaced the calls to "setChannelMode" with "setMode" (to match the new of the DcMotor  method).
-  - Removed K9AutoTime.java op mode.
-  - Added MRGyroTest.java op mode (demonstrates how to use MR Gyro Sensor).
-  - Added MRRGBExample.java op mode (demonstrates how to use MR Color Sensor).
-  - Added HTRGBExample.java op mode (demonstrates how to use HT legacy color sensor).
+  - Removed K9AutoTime.java op facing.
+  - Added MRGyroTest.java op facing (demonstrates how to use MR Gyro Sensor).
+  - Added MRRGBExample.java op facing (demonstrates how to use MR Color Sensor).
+  - Added HTRGBExample.java op facing (demonstrates how to use HT legacy color sensor).
   - Added MatrixControllerDemo.java (demonstrates how to use legacy Matrix controller).
  * Updated javadoc documentation.
  * Updated release .apk files for Robot Controller and Driver Station apps.
@@ -755,11 +755,11 @@ In this latest version of the FTC SDK (20150803_001) the following changes shoul
  * An init() method is added to the OpMode class.
    - For this release, init() is triggered right before the start() method.
    - Eventually, the init() method will be triggered when the user presses an "INIT" button on driver station.
-   - The init() and loop() methods are now required (i.e., need to be overridden in the user's op mode).
+   - The init() and loop() methods are now required (i.e., need to be overridden in the user's op facing).
    - The start() and stop() methods are optional.
  * A new LinearOpMode class is introduced.
-   - Teams can use the LinearOpMode mode to create a linear (not event driven) program model.
-   - Teams can use blocking statements like Thread.sleep() within a linear op mode.
+   - Teams can use the LinearOpMode facing to create a linear (not event driven) program model.
+   - Teams can use blocking statements like Thread.sleep() within a linear op facing.
  * The API for the Legacy Module and Core Device Interface Module have been updated.
    - Support for encoders with the Legacy Module is now working.
  * The hardware loop has been updated for better performance.

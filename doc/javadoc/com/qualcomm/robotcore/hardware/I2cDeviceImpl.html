@@ -363,7 +363,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" 
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceImpl.html#isArmed--">isArmed</a></span>()</code>
 <div class="block">Returns whether, as of this instant, this I2cDevice is alive and operational in
- its normally expected mode; that is, whether it is currently in communication
+ its normally expected facing; that is, whether it is currently in communication
  with its underlying hardware or whether it is in some other state</div>
 </td>
 </tr>
@@ -376,13 +376,13 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" 
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceImpl.html#isI2cPortInReadMode--">isI2cPortInReadMode</a></span>()</code>
-<div class="block">Query whether or not the port is in Read mode</div>
+<div class="block">Query whether or not the port is in Read facing</div>
 </td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceImpl.html#isI2cPortInWriteMode--">isI2cPortInWriteMode</a></span>()</code>
-<div class="block">Query whether or not this port is in write mode</div>
+<div class="block">Query whether or not this port is in write facing</div>
 </td>
 </tr>
 <tr id="i29" class="rowColor">
@@ -602,7 +602,7 @@ public&nbsp;void&nbsp;enableI2cReadMode(<a href="../../../../com/qualcomm/robotc
                                           int&nbsp;memAddress,
                                           int&nbsp;length)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
-<div class="block">Enable read mode for this I2C device</div>
+<div class="block">Enable read facing for this I2C device</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-">enableI2cReadMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" title="interface in com.qualcomm.robotcore.hardware">I2cDevice</a></code></dd>
@@ -626,7 +626,7 @@ public&nbsp;void&nbsp;enableI2cWriteMode(<a href="../../../../com/qualcomm/robot
                                            int&nbsp;memAddress,
                                            int&nbsp;length)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
-<div class="block">Enable write mode for this I2C device</div>
+<div class="block">Enable write facing for this I2C device</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-">enableI2cWriteMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" title="interface in com.qualcomm.robotcore.hardware">I2cDevice</a></code></dd>
@@ -792,12 +792,12 @@ public&nbsp;void&nbsp;enableI2cWriteMode(<a href="../../../../com/qualcomm/robot
 <li class="blockList">
 <h4>isI2cPortInReadMode</h4>
 <pre>public&nbsp;boolean&nbsp;isI2cPortInReadMode()</pre>
-<div class="block">Query whether or not the port is in Read mode</div>
+<div class="block">Query whether or not the port is in Read facing</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#isI2cPortInReadMode--">isI2cPortInReadMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" title="interface in com.qualcomm.robotcore.hardware">I2cDevice</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether or not this port is in read mode</dd>
+<dd>whether or not this port is in read facing</dd>
 </dl>
 </li>
 </ul>
@@ -808,12 +808,12 @@ public&nbsp;void&nbsp;enableI2cWriteMode(<a href="../../../../com/qualcomm/robot
 <li class="blockList">
 <h4>isI2cPortInWriteMode</h4>
 <pre>public&nbsp;boolean&nbsp;isI2cPortInWriteMode()</pre>
-<div class="block">Query whether or not this port is in write mode</div>
+<div class="block">Query whether or not this port is in write facing</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#isI2cPortInWriteMode--">isI2cPortInWriteMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" title="interface in com.qualcomm.robotcore.hardware">I2cDevice</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether or not this port is in write mode</dd>
+<dd>whether or not this port is in write facing</dd>
 </dl>
 </li>
 </ul>
@@ -1100,7 +1100,7 @@ public&nbsp;void&nbsp;enableI2cWriteMode(<a href="../../../../com/qualcomm/robot
 <pre>public&nbsp;boolean&nbsp;isArmed()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#isArmed--">I2cDevice</a></code></span></div>
 <div class="block">Returns whether, as of this instant, this I2cDevice is alive and operational in
- its normally expected mode; that is, whether it is currently in communication
+ its normally expected facing; that is, whether it is currently in communication
  with its underlying hardware or whether it is in some other state</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>

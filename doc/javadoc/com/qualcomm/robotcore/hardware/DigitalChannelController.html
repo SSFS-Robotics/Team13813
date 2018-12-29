@@ -163,14 +163,14 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#getDigitalChannelMode-int-">getDigitalChannelMode</a></span>(int&nbsp;channel)</code>
-<div class="block">Get the mode of a digital channel</div>
+<div class="block">Get the facing of a digital channel</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#getDigitalChannelState-int-">getDigitalChannelState</a></span>(int&nbsp;channel)</code>
 <div class="block">Get the state of a digital channel
- If it's in OUTPUT mode, this will return the output bit.</div>
+ If it's in OUTPUT facing, this will return the output bit.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -182,14 +182,14 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#setDigitalChannelMode-int-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-">setDigitalChannelMode</a></span>(int&nbsp;channel,
-                     <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;mode)</code>
-<div class="block">Set the mode of a digital channel</div>
+                     <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;facing)</code>
+<div class="block">Set the facing of a digital channel</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#setDigitalChannelMode-int-com.qualcomm.robotcore.hardware.DigitalChannelController.Mode-">setDigitalChannelMode</a></span>(int&nbsp;channel,
-                     <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;mode)</code>
+                     <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;facing)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
 <div class="block"><span class="deprecationComment">use <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#setDigitalChannelMode-int-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-"><code>setDigitalChannelMode(int, DigitalChannel.Mode)</code></a> instead</span></div>
 </div>
@@ -245,7 +245,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getDigitalChannelMode</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;getDigitalChannelMode(int&nbsp;channel)</pre>
-<div class="block">Get the mode of a digital channel</div>
+<div class="block">Get the facing of a digital channel</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>channel</code> - channel</dd>
@@ -261,12 +261,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setDigitalChannelMode</h4>
 <pre>void&nbsp;setDigitalChannelMode(int&nbsp;channel,
-                           <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;mode)</pre>
-<div class="block">Set the mode of a digital channel</div>
+                           <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;facing)</pre>
+<div class="block">Set the facing of a digital channel</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>channel</code> - channel</dd>
-<dd><code>mode</code> - INPUT or OUTPUT</dd>
+<dd><code>facing</code> - INPUT or OUTPUT</dd>
 </dl>
 </li>
 </ul>
@@ -278,7 +278,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <h4>setDigitalChannelMode</h4>
 <pre>@Deprecated
 void&nbsp;setDigitalChannelMode(int&nbsp;channel,
-                                       <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;mode)</pre>
+                                       <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;facing)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.html#setDigitalChannelMode-int-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-"><code>setDigitalChannelMode(int, DigitalChannel.Mode)</code></a> instead</span></div>
 </li>
 </ul>
@@ -290,8 +290,8 @@ void&nbsp;setDigitalChannelMode(int&nbsp;channel,
 <h4>getDigitalChannelState</h4>
 <pre>boolean&nbsp;getDigitalChannelState(int&nbsp;channel)</pre>
 <div class="block">Get the state of a digital channel
- If it's in OUTPUT mode, this will return the output bit.
- If the channel is in INPUT mode, this will return the input bit.</div>
+ If it's in OUTPUT facing, this will return the output bit.
+ If the channel is in INPUT facing, this will return the input bit.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>channel</code> - channel</dd>
@@ -310,7 +310,7 @@ void&nbsp;setDigitalChannelMode(int&nbsp;channel,
                             boolean&nbsp;state)</pre>
 <div class="block">Set the state of a digital channel
  <p>
- The behavior of this method is undefined for digital channels in INPUT mode.</div>
+ The behavior of this method is undefined for digital channels in INPUT facing.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>channel</code> - channel</dd>

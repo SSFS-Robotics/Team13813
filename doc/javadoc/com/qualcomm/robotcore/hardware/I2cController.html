@@ -215,7 +215,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
                  <a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddress,
                  int&nbsp;memAddress,
                  int&nbsp;length)</code>
-<div class="block">Enable read mode for a particular I2C device</div>
+<div class="block">Enable read facing for a particular I2C device</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -224,7 +224,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
                   <a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddress,
                   int&nbsp;memAddress,
                   int&nbsp;length)</code>
-<div class="block">Enable write mode for a particular I2C device</div>
+<div class="block">Enable write facing for a particular I2C device</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -299,7 +299,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html#isArmed--">isArmed</a></span>()</code>
 <div class="block">Returns whether, as of this instant, this controller is alive and operational in
- its normally expected mode; that is, whether it is currently in communication
+ its normally expected facing; that is, whether it is currently in communication
  with its underlying hardware or whether it is in some other state</div>
 </td>
 </tr>
@@ -312,13 +312,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html#isI2cPortInReadMode-int-">isI2cPortInReadMode</a></span>(int&nbsp;port)</code>
-<div class="block">Is the port in read mode?</div>
+<div class="block">Is the port in read facing?</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html#isI2cPortInWriteMode-int-">isI2cPortInWriteMode</a></span>(int&nbsp;port)</code>
-<div class="block">Is the port in write mode?</div>
+<div class="block">Is the port in write facing?</div>
 </td>
 </tr>
 <tr id="i21" class="rowColor">
@@ -455,7 +455,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
                        <a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddress,
                        int&nbsp;memAddress,
                        int&nbsp;length)</pre>
-<div class="block">Enable read mode for a particular I2C device</div>
+<div class="block">Enable read facing for a particular I2C device</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>physicalPort</code> - the port the device is attached to</dd>
@@ -475,7 +475,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
                         <a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddress,
                         int&nbsp;memAddress,
                         int&nbsp;length)</pre>
-<div class="block">Enable write mode for a particular I2C device</div>
+<div class="block">Enable write facing for a particular I2C device</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>physicalPort</code> - the port the device is attached to</dd>
@@ -633,12 +633,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>isI2cPortInReadMode</h4>
 <pre>boolean&nbsp;isI2cPortInReadMode(int&nbsp;port)</pre>
-<div class="block">Is the port in read mode?</div>
+<div class="block">Is the port in read facing?</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if in read mode; otherwise false</dd>
+<dd>true if in read facing; otherwise false</dd>
 </dl>
 </li>
 </ul>
@@ -649,12 +649,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>isI2cPortInWriteMode</h4>
 <pre>boolean&nbsp;isI2cPortInWriteMode(int&nbsp;port)</pre>
-<div class="block">Is the port in write mode?</div>
+<div class="block">Is the port in write facing?</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if in write mode; otherwise false</dd>
+<dd>true if in write facing; otherwise false</dd>
 </dl>
 </li>
 </ul>
@@ -886,7 +886,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <h4>isArmed</h4>
 <pre>boolean&nbsp;isArmed()</pre>
 <div class="block">Returns whether, as of this instant, this controller is alive and operational in
- its normally expected mode; that is, whether it is currently in communication
+ its normally expected facing; that is, whether it is currently in communication
  with its underlying hardware or whether it is in some other state</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

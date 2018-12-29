@@ -155,14 +155,14 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/AnalogOutputController.html#setAnalogOutputFrequency-int-int-">setAnalogOutputFrequency</a></span>(int&nbsp;port,
                         int&nbsp;freq)</code>
-<div class="block">Sets the channel output frequency in the range 1-5,000 Hz in mode 1, 2 or 3.</div>
+<div class="block">Sets the channel output frequency in the range 1-5,000 Hz in facing 1, 2 or 3.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/AnalogOutputController.html#setAnalogOutputMode-int-byte-">setAnalogOutputMode</a></span>(int&nbsp;port,
-                   byte&nbsp;mode)</code>
-<div class="block">Sets the channel operating mode.</div>
+                   byte&nbsp;facing)</code>
+<div class="block">Sets the channel operating facing.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -217,8 +217,8 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <pre>void&nbsp;setAnalogOutputVoltage(int&nbsp;port,
                             int&nbsp;voltage)</pre>
 <div class="block">Sets the channel output voltage.
- If mode == 0: takes input from -1023-1023, output in the range -4 to +4 volts.
- If mode == 1, 2, or 3: takes input from 0-1023, output in the range 0 to 8 volts.</div>
+ If facing == 0: takes input from -1023-1023, output in the range -4 to +4 volts.
+ If facing == 1, 2, or 3: takes input from 0-1023, output in the range 0 to 8 volts.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - channel 0 or 1</dd>
@@ -234,8 +234,8 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <h4>setAnalogOutputFrequency</h4>
 <pre>void&nbsp;setAnalogOutputFrequency(int&nbsp;port,
                               int&nbsp;freq)</pre>
-<div class="block">Sets the channel output frequency in the range 1-5,000 Hz in mode 1, 2 or 3.
- If mode 0 is selected, this field will be over-written to 0.</div>
+<div class="block">Sets the channel output frequency in the range 1-5,000 Hz in facing 1, 2 or 3.
+ If facing 0 is selected, this field will be over-written to 0.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - 1 or 0</dd>
@@ -250,8 +250,8 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setAnalogOutputMode</h4>
 <pre>void&nbsp;setAnalogOutputMode(int&nbsp;port,
-                         byte&nbsp;mode)</pre>
-<div class="block">Sets the channel operating mode.
+                         byte&nbsp;facing)</pre>
+<div class="block">Sets the channel operating facing.
  Mode 0: Voltage output. Range: -4V - 4V
  Mode 1: Sine wave output. Range: 0 - 8V
  Mode 2: Square wave output. Range: 0 - 8V
@@ -259,7 +259,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - 0 or 1</dd>
-<dd><code>mode</code> - voltage, sine, square, or triangle</dd>
+<dd><code>facing</code> - voltage, sine, square, or triangle</dd>
 </dl>
 </li>
 </ul>

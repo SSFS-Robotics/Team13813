@@ -146,7 +146,7 @@ extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/I
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#BALANCED">BALANCED</a></span></code>
 <div class="block">Continuously issue I2C reads as in REPEAT when we can, but do <em>not</em> automatically
- transition back to read-mode following a write operation in order to do so.</div>
+ transition back to read-facing following a write operation in order to do so.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -224,9 +224,9 @@ the order they are declared.</div>
 <h4>REPEAT</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a> REPEAT</pre>
 <div class="block">Continuously issue I2C reads whenever there's nothing else needing to be done.
- In this mode, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> will not necessarily execute an I2C transaction
+ In this facing, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> will not necessarily execute an I2C transaction
  for every call but might instead return data previously read from the I2C device.
- This mode is most useful in a device that spends most of its time doing read operations
+ This facing is most useful in a device that spends most of its time doing read operations
  and only very infrequently writes, if ever.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -242,9 +242,9 @@ the order they are declared.</div>
 <h4>BALANCED</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a> BALANCED</pre>
 <div class="block">Continuously issue I2C reads as in REPEAT when we can, but do <em>not</em> automatically
- transition back to read-mode following a write operation in order to do so. This mode is
+ transition back to read-facing following a write operation in order to do so. This facing is
  most useful in a device which has a balanced mix of read() and write() operations, such
- as a motor controller. Like <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#REPEAT"><code>REPEAT</code></a>, this mode might return data that was
+ as a motor controller. Like <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#REPEAT"><code>REPEAT</code></a>, this facing might return data that was
  previously read a short while ago.</div>
 </li>
 </ul>
@@ -256,7 +256,7 @@ the order they are declared.</div>
 <h4>ONLY_ONCE</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a> ONLY_ONCE</pre>
 <div class="block">Only issue a single I2C read, then set the read window to null to disable further reads.
- Executing a <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> in this mode will always get fresh data
+ Executing a <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> in this facing will always get fresh data
  from the I2C device.</div>
 </li>
 </ul>

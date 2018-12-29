@@ -154,7 +154,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DcMotorController.html#getMotorMode-int-">getMotorMode</a></span>(int&nbsp;motor)</code>
-<div class="block">Get the current motor mode.</div>
+<div class="block">Get the current motor facing.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -202,8 +202,8 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DcMotorController.html#setMotorMode-int-com.qualcomm.robotcore.hardware.DcMotor.RunMode-">setMotorMode</a></span>(int&nbsp;motor,
-            <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&nbsp;mode)</code>
-<div class="block">Set the current motor mode.</div>
+            <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&nbsp;facing)</code>
+<div class="block">Set the current motor facing.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -297,12 +297,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setMotorMode</h4>
 <pre>void&nbsp;setMotorMode(int&nbsp;motor,
-                  <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&nbsp;mode)</pre>
-<div class="block">Set the current motor mode. <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><code>DcMotor.RunMode</code></a></div>
+                  <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&nbsp;facing)</pre>
+<div class="block">Set the current motor facing. <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><code>DcMotor.RunMode</code></a></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>motor</code> - port of motor</dd>
-<dd><code>mode</code> - run mode</dd>
+<dd><code>facing</code> - run facing</dd>
 </dl>
 </li>
 </ul>
@@ -313,12 +313,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getMotorMode</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&nbsp;getMotorMode(int&nbsp;motor)</pre>
-<div class="block">Get the current motor mode. Returns the current "run mode".</div>
+<div class="block">Get the current motor facing. Returns the current "run facing".</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>motor</code> - port of motor</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>run mode</dd>
+<dd>run facing</dd>
 </dl>
 </li>
 </ul>

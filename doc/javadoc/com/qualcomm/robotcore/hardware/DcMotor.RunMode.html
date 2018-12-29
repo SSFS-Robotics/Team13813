@@ -122,7 +122,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public static enum <span class="typeNameLabel">DcMotor.RunMode</span>
 extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a>&gt;</pre>
-<div class="block">The run mode of a motor <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><code>DcMotor.RunMode</code></a> controls how the motor interprets the
+<div class="block">The run facing of a motor <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><code>DcMotor.RunMode</code></a> controls how the motor interprets the
  it's parameter settings passed through power- and encoder-related methods.
  Some of these modes internally use <a href="https://en.wikipedia.org/wiki/PID_controller">PID</a>
  control to achieve their function, while others do not. Those that do are referred
@@ -206,7 +206,7 @@ extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/D
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html#isPIDMode--">isPIDMode</a></span>()</code>
-<div class="block">Returns whether this RunMode is a PID-controlled mode or not</div>
+<div class="block">Returns whether this RunMode is a PID-controlled facing or not</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -278,7 +278,7 @@ the order they are declared.</div>
 <h4>RUN_USING_ENCODER</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware">DcMotor.RunMode</a> RUN_USING_ENCODER</pre>
 <div class="block">The motor is to do its best to run at targeted velocity. An encoder must be affixed
- to the motor in order to use this mode. This is a PID mode.</div>
+ to the motor in order to use this facing. This is a PID facing.</div>
 </li>
 </ul>
 <a name="RUN_TO_POSITION">
@@ -291,7 +291,7 @@ the order they are declared.</div>
 <div class="block">The motor is to attempt to rotate in whatever direction is necessary to cause the
  encoder reading to advance or retreat from its current setting to the setting which
  has been provided through the <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.html#setTargetPosition-int-"><code>setTargetPosition()</code></a> method.
- An encoder must be affixed to this motor in order to use this mode. This is a PID mode.</div>
+ An encoder must be affixed to this motor in order to use this facing. This is a PID facing.</div>
 </li>
 </ul>
 <a name="STOP_AND_RESET_ENCODER">
@@ -305,13 +305,13 @@ the order they are declared.</div>
  <a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html#RUN_TO_POSITION"><code>RUN_TO_POSITION</code></a>,
  the motor is not rotated in order to achieve this; rather, the current rotational
  position of the motor is simply reinterpreted as the new zero value. However, as
- a side effect of placing a motor in this mode, power is removed from the motor, causing
- it to stop, though it is unspecified whether the motor enters brake or float mode.
+ a side effect of placing a motor in this facing, power is removed from the motor, causing
+ it to stop, though it is unspecified whether the motor enters brake or float facing.
 
  Further, it should be noted that setting a motor to<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html#STOP_AND_RESET_ENCODER"><code>STOP_AND_RESET_ENCODER</code></a> may or may not be a transient state: motors connected to some motor
- controllers will remain in this mode until explicitly transitioned to a different one, while
+ controllers will remain in this facing until explicitly transitioned to a different one, while
  motors connected to other motor controllers will automatically transition to a different
- mode after the reset of the encoder is complete.</div>
+ facing after the reset of the encoder is complete.</div>
 </li>
 </ul>
 <a name="RUN_WITHOUT_ENCODERS">
@@ -416,10 +416,10 @@ public&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode
 <li class="blockList">
 <h4>isPIDMode</h4>
 <pre>public&nbsp;boolean&nbsp;isPIDMode()</pre>
-<div class="block">Returns whether this RunMode is a PID-controlled mode or not</div>
+<div class="block">Returns whether this RunMode is a PID-controlled facing or not</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether this RunMode is a PID-controlled mode or not</dd>
+<dd>whether this RunMode is a PID-controlled facing or not</dd>
 </dl>
 </li>
 </ul>
