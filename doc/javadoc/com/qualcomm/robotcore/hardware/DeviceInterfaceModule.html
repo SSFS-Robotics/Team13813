@@ -196,13 +196,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelContr
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DeviceInterfaceModule.html#setDigitalIOControlByte-byte-">setDigitalIOControlByte</a></span>(byte&nbsp;input)</code>
-<div class="block">If a particular bit is set to one, the corresponding channel pin will be in output facing.</div>
+<div class="block">If a particular bit is set to one, the corresponding channel pin will be in output mode.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DeviceInterfaceModule.html#setDigitalOutputByte-byte-">setDigitalOutputByte</a></span>(byte&nbsp;input)</code>
-<div class="block">If a a particular control field bit is set to one, the channel pin will be in output facing and
+<div class="block">If a a particular control field bit is set to one, the channel pin will be in output mode and
  will reflect the value of the corresponding field bit.</div>
 </td>
 </tr>
@@ -278,7 +278,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelContr
 <h4>getDigitalInputStateByte</h4>
 <pre>int&nbsp;getDigitalInputStateByte()</pre>
 <div class="block">A byte containing the current logic levels present in the D7-D0 channel pins.
- If a particular pin is in output facing, the current output state will be reported.</div>
+ If a particular pin is in output mode, the current output state will be reported.</div>
 </li>
 </ul>
 <a name="setDigitalIOControlByte-byte-">
@@ -288,8 +288,8 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelContr
 <li class="blockList">
 <h4>setDigitalIOControlByte</h4>
 <pre>void&nbsp;setDigitalIOControlByte(byte&nbsp;input)</pre>
-<div class="block">If a particular bit is set to one, the corresponding channel pin will be in output facing.
- Else it will be in input facing.</div>
+<div class="block">If a particular bit is set to one, the corresponding channel pin will be in output mode.
+ Else it will be in input mode.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>input</code> - - the desired setting for each channel pin.</dd>
@@ -317,7 +317,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelContr
 <li class="blockList">
 <h4>setDigitalOutputByte</h4>
 <pre>void&nbsp;setDigitalOutputByte(byte&nbsp;input)</pre>
-<div class="block">If a a particular control field bit is set to one, the channel pin will be in output facing and
+<div class="block">If a a particular control field bit is set to one, the channel pin will be in output mode and
  will reflect the value of the corresponding field bit.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -334,7 +334,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelContr
 <pre>byte&nbsp;getDigitalOutputStateByte()</pre>
 <div class="block">The D7-D0 output set field is a byte containing the required I/O output of the D7-D0
  channel pins. If the corresponding Dy-D0 I/O control field bit is set to one, the channel pin
- will be in output facing and will reflect the value of the corresponding D7-D0 output set field bit.</div>
+ will be in output mode and will reflect the value of the corresponding D7-D0 output set field bit.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>D7-D0 output set field.</dd>

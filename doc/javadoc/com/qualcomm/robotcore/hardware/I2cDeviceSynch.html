@@ -116,7 +116,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
  <p>Methods are provided to read and write data simply and straightforwardly. Singleton bytes
  or larger quantities of data can be read or written using <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read8-int-"><code>read8()</code></a> and
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-"><code>write8()</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-"><code>write()</code></a>
- respectively. No attention to 'read facing' or 'write facing' is required. Simply call reads
+ respectively. No attention to 'read mode' or 'write mode' is required. Simply call reads
  and writes as you need them, and the right thing happens.
 
  <p>For devices that automatically shutdown if no communication is received within a certain
@@ -136,28 +136,28 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
  from the I2c device. However, in many situations, reads can be significantly optimized by use
  of a <em>read window</em>. With a read window, a larger chunk of the device's I2c register space
  can be automatically read even if only a portion of it is needed to service a particular read()
- call; this can make subsequent read()s significantly faster. Further, depending on the facing
+ call; this can make subsequent read()s significantly faster. Further, depending on the mode
  of <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadWindow.html" title="class in com.qualcomm.robotcore.hardware"><code>ReadWindow</code></a> used, read
  operations will occur in the background, and read()s will be serviced (subject to causality) out
  of cached data updated and maintained by the background processing without any synchronous
- communication with the I2c device itself. For sensors in particular, this facing of operation
+ communication with the I2c device itself. For sensors in particular, this mode of operation
  can be particularly advantageous.</p>
 
  <p>Three modes of <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadWindow.html" title="class in com.qualcomm.robotcore.hardware"><code>ReadWindow</code></a> are
  available:</p>
  <ol>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#REPEAT"><code>REPEAT</code></a>. In this
-     facing, background reads are always scheduled and cached data updated whenever there's no other
-     (writing) work to do. This is the facing commonly used by sensors, who mostly execute reads
+     mode, background reads are always scheduled and cached data updated whenever there's no other
+     (writing) work to do. This is the mode commonly used by sensors, who mostly execute reads
      and only issue a write relatively infrequently.</li>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#BALANCED"><code>BALANCED</code></a>. In this
-     facing, background reads are also performed, but only if the user initiates a manual read first after
+     mode, background reads are also performed, but only if the user initiates a manual read first after
      a write operation. The object does not automatically start background reads on its own, as the
-     transition from writing to reading can be a relatively expensive one. This facing can be useful
+     transition from writing to reading can be a relatively expensive one. This mode can be useful
      for objects like motor and servo controllers which exhibit a balanced mix of both write and
      read operations</li>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#ONLY_ONCE"><code>ONLY_ONCE</code></a>. In this
-     facing, no background reading is performed; data is always retrieved with a synchronous
+     mode, no background reading is performed; data is always retrieved with a synchronous
      communication to the i2c device.</li>
  </ol>
 

@@ -17,7 +17,7 @@ public class VisionManager {
 
         vision = new MasterVision(parameters, hardwareMap, true, infer);
         vision.init();
-    }
+    }//facing
 
     public void start() {
         vision.enable();

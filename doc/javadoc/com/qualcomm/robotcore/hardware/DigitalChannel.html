@@ -133,7 +133,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a></span></code>
-<div class="block">Digital channel facing - input or output</div>
+<div class="block">Digital channel mode - input or output</div>
 </td>
 </tr>
 </table>
@@ -161,7 +161,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#getMode--">getMode</a></span>()</code>
-<div class="block">Returns whether the channel is in input or output facing</div>
+<div class="block">Returns whether the channel is in input or output mode</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -172,13 +172,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-">setMode</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;facing)</code>
-<div class="block">Changes whether the channel is in input or output facing</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-">setMode</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;mode)</code>
+<div class="block">Changes whether the channel is in input or output mode</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannelController.Mode-">setMode</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;facing)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannelController.Mode-">setMode</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;mode)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
 <div class="block"><span class="deprecationComment">use <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-"><code>setMode(Mode)</code></a> instead</span></div>
 </div>
@@ -219,10 +219,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getMode</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;getMode()</pre>
-<div class="block">Returns whether the channel is in input or output facing</div>
+<div class="block">Returns whether the channel is in input or output mode</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether the channel is in input or output facing</dd>
+<dd>whether the channel is in input or output mode</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-"><code>setMode(Mode)</code></a></dd>
 </dl>
@@ -234,11 +234,11 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <ul class="blockList">
 <li class="blockList">
 <h4>setMode</h4>
-<pre>void&nbsp;setMode(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;facing)</pre>
-<div class="block">Changes whether the channel is in input or output facing</div>
+<pre>void&nbsp;setMode(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannel.Mode</a>&nbsp;mode)</pre>
+<div class="block">Changes whether the channel is in input or output mode</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>facing</code> - whether the channel is in input or output facing</dd>
+<dd><code>mode</code> - whether the channel is in input or output mode</dd>
 </dl>
 </li>
 </ul>
@@ -277,7 +277,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setMode</h4>
 <pre>@Deprecated
-void&nbsp;setMode(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;facing)</pre>
+void&nbsp;setMode(<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware">DigitalChannelController.Mode</a>&nbsp;mode)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannel.html#setMode-com.qualcomm.robotcore.hardware.DigitalChannel.Mode-"><code>setMode(Mode)</code></a> instead</span></div>
 </li>
 </ul>

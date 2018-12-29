@@ -114,16 +114,16 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
  The Legacy Module firmware supports all NXT LEGO sensors (except the Lego Color Sensor),
  HiTechnic sensors, Matrix controllers as well as the HiTechnic Tetrix motor and servo controllers.
 
- Each Legacy Module port can operate in digital as well as analog modes. In digital facing, legacy
+ Each Legacy Module port can operate in digital as well as analog modes. In digital mode, legacy
  connector pins 5 and 6 can be set to logic 0 or logic 1.
 
- In analog facing, the voltage on legacy connector pin 1 is measured using a 10 bit analog to digital
+ In analog mode, the voltage on legacy connector pin 1 is measured using a 10 bit analog to digital
  converter. Additionally, pins 5 and 6 can be set to logic 0 or logic 1 for control of the attached
  device, such as a LEGO light sensor which uses pin 5 to turn the sensor LED on and off.
 
- In I2C facing, legacy connector pins 5 and 6 are used to communicate with I2C devices in accordance
+ In I2C mode, legacy connector pins 5 and 6 are used to communicate with I2C devices in accordance
  with the LEGO interpretation of I2C. Ports 4 and 5 can additionally be switched into pin 1 9v
- supply facing to permit LEGO ultrasonic range sensors to be used</div>
+ supply mode to permit LEGO ultrasonic range sensors to be used</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="http://www.modernroboticsinc.com/core-legacy-module-3">Modern Robotics Legacy Module</a></dd>
@@ -193,7 +193,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/LegacyModule.html#enableAnalogReadMode-int-">enableAnalogReadMode</a></span>(int&nbsp;physicalPort)</code>
-<div class="block">Enable a physical port in analog read facing</div>
+<div class="block">Enable a physical port in analog read mode</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -205,7 +205,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/LegacyModule.html#readAnalogRaw-int-">readAnalogRaw</a></span>(int&nbsp;physicalPort)</code>
-<div class="block">Read an analog value from a device; only works in analog read facing</div>
+<div class="block">Read an analog value from a device; only works in analog read mode</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -219,7 +219,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/LegacyModule.html#setDigitalLine-int-int-boolean-">setDigitalLine</a></span>(int&nbsp;physicalPort,
               int&nbsp;line,
               boolean&nbsp;set)</code>
-<div class="block">Set the value of digital line 0 or 1 while in analog facing.</div>
+<div class="block">Set the value of digital line 0 or 1 while in analog mode.</div>
 </td>
 </tr>
 </table>
@@ -258,7 +258,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>enableAnalogReadMode</h4>
 <pre>void&nbsp;enableAnalogReadMode(int&nbsp;physicalPort)</pre>
-<div class="block">Enable a physical port in analog read facing</div>
+<div class="block">Enable a physical port in analog read mode</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>physicalPort</code> - physical port number on the device</dd>
@@ -272,7 +272,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>readAnalogRaw</h4>
 <pre>byte[]&nbsp;readAnalogRaw(int&nbsp;physicalPort)</pre>
-<div class="block">Read an analog value from a device; only works in analog read facing</div>
+<div class="block">Read an analog value from a device; only works in analog read mode</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>physicalPort</code> - physical port number on the device</dd>
@@ -289,7 +289,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <h4>readAnalogVoltage</h4>
 <pre>double&nbsp;readAnalogVoltage(int&nbsp;physicalPort)</pre>
 <div class="block">Reads the analog voltage from a device. The port indicated must currently
- be in analog read facing.</div>
+ be in analog read mode.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>physicalPort</code> - the port whose voltage is to be read</dd>
@@ -337,7 +337,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <pre>void&nbsp;setDigitalLine(int&nbsp;physicalPort,
                     int&nbsp;line,
                     boolean&nbsp;set)</pre>
-<div class="block">Set the value of digital line 0 or 1 while in analog facing.
+<div class="block">Set the value of digital line 0 or 1 while in analog mode.
  <p>
  These are port pins 5 and 6.</div>
 <dl>

@@ -186,7 +186,7 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/qualcomm/robotcore/eventloop/opmode/OpMode.html#time">time</a></span></code>
-<div class="block">number of seconds this op facing has been running, this is
+<div class="block">number of seconds this op mode has been running, this is
  updated before every call to loop.</div>
 </td>
 </tr>
@@ -227,7 +227,7 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/qualcomm/robotcore/eventloop/opmode/OpMode.html#getRuntime--">getRuntime</a></span>()</code>
-<div class="block">Get the number of seconds this op facing has been running</div>
+<div class="block">Get the number of seconds this op mode has been running</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -374,7 +374,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>time</h4>
 <pre>public&nbsp;double time</pre>
-<div class="block">number of seconds this op facing has been running, this is
+<div class="block">number of seconds this op mode has been running, this is
  updated before every call to loop.</div>
 </li>
 </ul>
@@ -450,7 +450,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;OpMode()</pre>
 <div class="block">OpMode constructor
  <p>
- The op facing name should be unique. It will be the name displayed on the driver station. If
+ The op mode name should be unique. It will be the name displayed on the driver station. If
  multiple op modes have the same name, only one will be available.</div>
 </li>
 </ul>
@@ -510,7 +510,7 @@ extends java.lang.Object</pre>
 <pre>public abstract&nbsp;void&nbsp;loop()</pre>
 <div class="block">User defined loop method
  <p>
- This method will be called repeatedly in a loop while this op facing is running</div>
+ This method will be called repeatedly in a loop while this op mode is running</div>
 </li>
 </ul>
 <a name="stop--">
@@ -522,7 +522,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;void&nbsp;stop()</pre>
 <div class="block">User defined stop method
  <p>
- This method will be called when this op facing is first disabled
+ This method will be called when this op mode is first disabled
 
  The stop method is optional. By default this method takes no action.</div>
 </li>
@@ -552,12 +552,12 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getRuntime</h4>
 <pre>public&nbsp;double&nbsp;getRuntime()</pre>
-<div class="block">Get the number of seconds this op facing has been running
+<div class="block">Get the number of seconds this op mode has been running
  <p>
  This method has sub millisecond accuracy.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>number of seconds this op facing has been running</dd>
+<dd>number of seconds this op mode has been running</dd>
 </dl>
 </li>
 </ul>

@@ -90,7 +90,7 @@ public class KokiAutoNext extends OpMode {
         throw new UnsupportedOperationException("setTeam() method not implemented!");
     }
     public void setFacing() {
-        throw new UnsupportedOperationException("setFacing() method not implemented!");
+        throw new UnsupportedOperationException("setTemprename() method not implemented!");
     }
     public void setState() {
         throw new UnsupportedOperationException("setState() method not implemented!");

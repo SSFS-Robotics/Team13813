@@ -209,7 +209,7 @@ extends java.lang.Object</pre>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadWindow.html#getReadMode--">getReadMode</a></span>()</code>
-<div class="block">Returns the facing of the window</div>
+<div class="block">Returns the mode of the window</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -240,7 +240,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadWindow.html#mayInitiateSwitchToReadMode--">mayInitiateSwitchToReadMode</a></span>()</code>
 <div class="block">Answers as to whether this window in its present state ought to cause a transition
- to read-facing when there's nothing else for the device to be doing.</div>
+ to read-mode when there's nothing else for the device to be doing.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -398,10 +398,10 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getReadMode</h4>
 <pre>public&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a>&nbsp;getReadMode()</pre>
-<div class="block">Returns the facing of the window</div>
+<div class="block">Returns the mode of the window</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the facing of the window</dd>
+<dd>the mode of the window</dd>
 </dl>
 </li>
 </ul>
@@ -452,10 +452,10 @@ extends java.lang.Object</pre>
 <h4>mayInitiateSwitchToReadMode</h4>
 <pre>public&nbsp;boolean&nbsp;mayInitiateSwitchToReadMode()</pre>
 <div class="block">Answers as to whether this window in its present state ought to cause a transition
- to read-facing when there's nothing else for the device to be doing.</div>
+ to read-mode when there's nothing else for the device to be doing.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether this device should cause a read facing transition</dd>
+<dd>whether this device should cause a read mode transition</dd>
 </dl>
 </li>
 </ul>
