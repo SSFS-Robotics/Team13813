@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class GamepadManager {
+import java.io.Serializable;
+
+public class GamepadManager implements Serializable, Cloneable {
 
     /*
         MOTOR
@@ -25,7 +27,7 @@ public class GamepadManager {
     private float forceFrontLeftServo;
     private float forceFrontRightServo;
 
-    private Telemetry telemetry;
+    private transient Telemetry telemetry;
 
     public GamepadManager(Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -84,10 +86,18 @@ public class GamepadManager {
             triggers: float 0 (not pressed), float 1 (pressed) - lower
             bumpers: false (not pressed), true (pressed) - upper
          */
-        float rollIn = (gp1.left_bumper || gp1.right_bumper)?1.0f:0.0f;
-        float rollOut = Range.clip(gp1.left_trigger + gp1.right_trigger, -1, 1);
-        forceFrontLeftServo = Range.clip(-rollOut + rollIn, -1, 1);
-        forceFrontRightServo = Range.clip(-rollOut + rollIn, -1, 1);
+//        float rollIn = (gp1.left_bumper || gp1.right_bumper)?1.0f:0.0f;
+//        float rollOut = Range.clip(gp1.left_trigger + gp1.right_trigger, -1, 1);
+//        forceFrontLeftServo = Range.clip(-rollOut + rollIn, -1, 1);
+//        forceFrontRightServo = Range.clip(-rollOut + rollIn, -1, 1);
+
+        float rollInLeft = (gp1.left_bumper)?1.0f:0.0f;
+        float rollInRight = (gp1.right_bumper)?1.0f:0.0f;
+        float rollOutLeft = Range.clip(gp1.left_trigger, -1, 1);
+        float rollOutRight = Range.clip(gp1.right_trigger, -1, 1);
+        forceFrontLeftServo = Range.clip(-rollOutLeft + rollInLeft, -1, 1)/2.0f+0.5f; // (0, 0.5)
+        forceFrontRightServo = Range.clip(-rollOutRight + rollInRight, -1, 1)/2.0f+0.5f; // (0, 0.5)
+
         //TODO: adjust sign
 
     }
@@ -125,5 +135,16 @@ public class GamepadManager {
 
     public float getForceFrontRightServo() {
         return forceFrontRightServo;
+    }
+
+    @Override
+    public GamepadManager clone() {
+        try{
+            GamepadManager gamepadManager = (GamepadManager)super.clone();
+            return gamepadManager;
+        }catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

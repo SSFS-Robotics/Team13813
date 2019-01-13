@@ -13,5 +13,6 @@ public enum SavingPath {
     RedBreakerLeft,
     RedBreakerCenter,
     RedBreakerRight,
+    TEST,
 }
 

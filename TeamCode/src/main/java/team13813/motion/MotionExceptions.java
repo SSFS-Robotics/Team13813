@@ -4,11 +4,20 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MotionExceptions {
+    public static <T> T getWithException(HardwareMap hardwareMap, Class<? extends T> classOrInterface, String deviceName) {
+        try {
+            return hardwareMap.get(classOrInterface, deviceName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     public static void setModeWithException(DcMotor motor, DcMotor.RunMode mode) {
         try {
             motor.setMode(mode);
@@ -40,7 +49,7 @@ public class MotionExceptions {
         try {
             return touch.getState();
         } catch (NullPointerException e) {
-            return false;
+            return true;
         }
     }
     public static double getDistanceWithException(DistanceSensor distance, DistanceUnit distanceUnit) {
@@ -76,6 +85,13 @@ public class MotionExceptions {
             return color.blue();
         } catch (NullPointerException e) {
             return 1;
+        }
+    }
+    public static void setModeWithException(DigitalChannel touch, DigitalChannel.Mode mode) {
+        try {
+            touch.setMode(mode);
+        } catch (NullPointerException e) {
+
         }
     }
 }

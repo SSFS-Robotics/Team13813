@@ -32,7 +32,6 @@ package team13813.mode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.ArrayList;
 
@@ -85,7 +84,7 @@ public class KokiAutoNext extends OpMode {
     private VisionManager visionManager;
     private GamepadManager gamepadManager;
     private ArrayList<GoldPositions> positionStream = new ArrayList<>();
-    private ArrayList<ArrayList<Gamepad>> savingGamepadStream = new ArrayList<>();
+    private String debugMessage = "";
 
     public void setTeam() {
         throw new UnsupportedOperationException("setTeam() method not implemented!");
@@ -107,6 +106,7 @@ public class KokiAutoNext extends OpMode {
         motionManager = new MotionManager(telemetry, hardwareMap);
         gamepadManager = new GamepadManager(telemetry);
         visionManager.start();
+        telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
     }
 
@@ -127,6 +127,7 @@ public class KokiAutoNext extends OpMode {
 
         long timeElapsed = System.currentTimeMillis() - lStartTime;
         telemetry.addData("Record", "timeElapsed = %d", timeElapsed);
+        telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
     }
 
@@ -136,8 +137,19 @@ public class KokiAutoNext extends OpMode {
         visionManager.disable();
         resetStartTime();
         if (Configuration.getState() == State.AUTONOMOUS) {
-            Configuration.gamepadsTimeStream = (ArrayList<ArrayList<Gamepad>>) FileSerialization.load(hardwareMap.appContext, Configuration.getFileName());
+            debugMessage = debugMessage + "Getting file in " + Configuration.getFileName() + "; ";
+            Configuration.gamepadsTimeStream = (ArrayList<GamepadManager>) FileSerialization.load(hardwareMap.appContext, Configuration.getFileName(), telemetry);
+            if (Configuration.gamepadsTimeStream != null) {
+                debugMessage = debugMessage + "Configuration.gamepadsTimeStream != null; ";
+            } else {
+                if (FileSerialization.load(hardwareMap.appContext, Configuration.getFileName(), telemetry) != null) {
+                    debugMessage = debugMessage + "Configuration.gamepadsTimeStream == null; Object is not null; ";
+                } else {
+                    debugMessage = debugMessage + "Configuration.gamepadsTimeStream == null; Object is null; ";
+                }
+            }
         }
+        telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
     }
 
@@ -147,29 +159,31 @@ public class KokiAutoNext extends OpMode {
         if (Configuration.getState() == State.CONTROL) {
             gamepadManager.update(gamepad1, gamepad2);
         } else if (Configuration.getState() == State.RECORDING) {
-            ArrayList<Gamepad> gamepads = new ArrayList<>();
-            gamepads.add(gamepad1);
-            gamepads.add(gamepad2);
-            savingGamepadStream.add(gamepads);
             gamepadManager.update(gamepad1, gamepad2);
+            Configuration.gamepadsTimeStream.add(gamepadManager.clone());
         } else if (Configuration.getState() == State.AUTONOMOUS && Configuration.gamepadsTimeStream.size() >0) {
-            Gamepad fakeGamepad1 = Configuration.gamepadsTimeStream.get(0).get(0);
-            Gamepad fakeGamepad2 = Configuration.gamepadsTimeStream.get(0).get(1);
-            gamepadManager.update(fakeGamepad1, fakeGamepad2);
+            gamepadManager = Configuration.gamepadsTimeStream.get(0);
             Configuration.gamepadsTimeStream.remove(0);
         }
         motionManager.updateWithException(gamepadManager);
 //        motionManager.update(gamepadManager);
+        telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
     }
 
     @Override
     public void stop() {
         if (Configuration.getState() == State.RECORDING) {
-            FileSerialization.save(hardwareMap.appContext, Configuration.getFileName(), savingGamepadStream);
+            boolean successful = FileSerialization.save(hardwareMap.appContext, Configuration.getFileName(), Configuration.gamepadsTimeStream, telemetry);
+            debugMessage = debugMessage + "Configuration saved in " + Configuration.getFileName() + "; Successful = " + Boolean.toString(successful) + "; ";
         }
         telemetry.addData("Time", "time = %f", time);
+        telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
+
+//        while (this.getRuntime() < 99999) {
+//            System.out.println();
+//        }
     }
 
     private static GoldPositions calculateLastKnown(ArrayList<GoldPositions> positionStream) {

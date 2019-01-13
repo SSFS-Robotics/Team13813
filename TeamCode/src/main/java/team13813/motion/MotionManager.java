@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import team13813.util.Configuration;
 import team13813.io.GamepadManager;
+import team13813.util.Configuration;
 
 public class MotionManager {
 
@@ -56,35 +56,47 @@ public class MotionManager {
     public MotionManager(Telemetry telemetry, HardwareMap hardwareMap) {
         this.telemetry = telemetry;
 
-        try {
-            //motor
-            this.leftFrontWheel = hardwareMap.get(DcMotor.class, Configuration.FRONT_LEFT_MOTOR);
-            this.rightFrontWheel = hardwareMap.get(DcMotor.class, Configuration.FRONT_RIGHT_MOTOR);
-            this.leftBackWheel = hardwareMap.get(DcMotor.class, Configuration.BACK_LEFT_MOTOR);
-            this.rightBackWheel = hardwareMap.get(DcMotor.class, Configuration.BACK_RIGHT_MOTOR);
-            this.liftMotor = hardwareMap.get(DcMotor.class, Configuration.LIFT_MOTOR);
-            this.armLeftMotor = hardwareMap.get(DcMotor.class, Configuration.ARM_LEFT_MOTOR);
-            this.armRightMotor = hardwareMap.get(DcMotor.class, Configuration.ARM_RIGHT_MOTOR);
-            //servo
-            this.leftFrontServo = hardwareMap.get(Servo.class, Configuration.FRONT_LEFT_SERVO);
-            this.rightFrontServo = hardwareMap.get(Servo.class, Configuration.FRONT_RIGHT_SERVO);
-            //TODO: rightServo.setDirection(Servo.Direction.REVERSE);
+        this.leftFrontWheel = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.FRONT_LEFT_MOTOR);
+        this.rightFrontWheel = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.FRONT_RIGHT_MOTOR);
+        this.leftBackWheel = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.BACK_LEFT_MOTOR);
+        this.rightBackWheel = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.BACK_RIGHT_MOTOR);
+        this.liftMotor = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.LIFT_MOTOR);
+        this.armLeftMotor = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.ARM_LEFT_MOTOR);
+        this.armRightMotor = MotionExceptions.getWithException(hardwareMap, DcMotor.class, Configuration.ARM_RIGHT_MOTOR);
 
-            //touch
-            this.touch = hardwareMap.get(DigitalChannel.class, Configuration.TOUCH_SENSOR);
-            this.touch.setMode(DigitalChannel.Mode.INPUT);
-            //distance
-            this.leftDistance = hardwareMap.get(DistanceSensor.class, Configuration.LEFT_DISTANCE_SENSOR);
-            this.rightDistance = hardwareMap.get(DistanceSensor.class, Configuration.RIGHT_DISTANCE_SENSOR);
-            //color
-            this.color = hardwareMap.get(ColorSensor.class, Configuration.COLOR_SENSOR);
-            int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-            this.relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-        } catch (IllegalArgumentException e) {
-//            e.printStackTrace();
-            telemetry.addData("WARNING", "IllegalArgumentException. Not all programmed hardweres are initialized.");
-        }
+        this.leftFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_LEFT_SERVO);
+        this.rightFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_RIGHT_SERVO);
 
+        this.touch = MotionExceptions.getWithException(hardwareMap, DigitalChannel.class, Configuration.TOUCH_SENSOR);
+
+        this.leftDistance = MotionExceptions.getWithException(hardwareMap, DistanceSensor.class, Configuration.LEFT_DISTANCE_SENSOR);
+        this.rightDistance = MotionExceptions.getWithException(hardwareMap, DistanceSensor.class, Configuration.RIGHT_DISTANCE_SENSOR);
+
+        this.color = MotionExceptions.getWithException(hardwareMap, ColorSensor.class, Configuration.COLOR_SENSOR);
+
+
+//        this.leftFrontWheel = hardwareMap.get(DcMotor.class, Configuration.FRONT_LEFT_MOTOR);
+//        this.rightFrontWheel = hardwareMap.get(DcMotor.class, Configuration.FRONT_RIGHT_MOTOR);
+//        this.leftBackWheel = hardwareMap.get(DcMotor.class, Configuration.BACK_LEFT_MOTOR);
+//        this.rightBackWheel = hardwareMap.get(DcMotor.class, Configuration.BACK_RIGHT_MOTOR);
+//        this.liftMotor = hardwareMap.get(DcMotor.class, Configuration.LIFT_MOTOR);
+//        this.armLeftMotor = hardwareMap.get(DcMotor.class, Configuration.ARM_LEFT_MOTOR);
+//        this.armRightMotor = hardwareMap.get(DcMotor.class, Configuration.ARM_RIGHT_MOTOR);
+//        //servo
+//        this.leftFrontServo = hardwareMap.get(Servo.class, Configuration.FRONT_LEFT_SERVO);
+//        this.rightFrontServo = hardwareMap.get(Servo.class, Configuration.FRONT_RIGHT_SERVO);
+//        //TODO: rightServo.setDirection(Servo.Direction.REVERSE);
+//
+//        //touch
+//        this.touch = hardwareMap.get(DigitalChannel.class, Configuration.TOUCH_SENSOR);
+//        //distance
+//        this.leftDistance = hardwareMap.get(DistanceSensor.class, Configuration.LEFT_DISTANCE_SENSOR);
+//        this.rightDistance = hardwareMap.get(DistanceSensor.class, Configuration.RIGHT_DISTANCE_SENSOR);
+//        //color
+//        this.color = hardwareMap.get(ColorSensor.class, Configuration.COLOR_SENSOR);
+
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        this.relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
     }
 
     public void updateWithException(GamepadManager gamepadManager) {
@@ -116,10 +128,10 @@ public class MotionManager {
         MotionExceptions.setPowerWithException(rightBackWheel, gamepadManager.getForceBackRightMotor());
 //        rightBackWheel.setPower(gamepadManager.getForceBackRightMotor());
 
-        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f", gamepadManager.getForceFrontLeftMotor()));
-        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f", gamepadManager.getForceFrontRightMotor()));
-        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f", gamepadManager.getForceBackLeftMotor()));
-        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f", gamepadManager.getForceBackRightMotor()));
+        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontLeftMotor(), leftFrontWheel!=null));
+        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontRightMotor(), rightFrontWheel!=null));
+        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackLeftMotor(), leftBackWheel!=null));
+        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackRightMotor(), rightBackWheel!=null));
 
         if (Configuration.ENCODER) {
             MotionExceptions.setModeWithException(liftMotor, DcMotor.RunMode.RUN_USING_ENCODER);
@@ -143,43 +155,39 @@ public class MotionManager {
 //        liftMotor.setPower(0.75); //TODO: check power
         MotionExceptions.setTargetPositionWithException(liftMotor, Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor());
 //        liftMotor.setTargetPosition(Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor()); //TODO: make sure the motor is from andymark
-        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f", gamepadManager.getForceLiftMotor()));
+        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f, Enabled: %b", gamepadManager.getForceLiftMotor(), liftMotor!=null));
 
         MotionExceptions.setPowerWithException(armLeftMotor, gamepadManager.getForceArmLeftMotor());
 //        armLeftMotor.setPower(gamepadManager.getForceArmLeftMotor());
         MotionExceptions.setPowerWithException(armRightMotor, gamepadManager.getForceArmRightMotor());
-        armRightMotor.setPower(gamepadManager.getForceArmRightMotor());
-        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f", gamepadManager.getForceArmLeftMotor()));
-        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f", gamepadManager.getForceArmRightMotor()));
+//        armRightMotor.setPower(gamepadManager.getForceArmRightMotor());
+        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f, Enabled: %b", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null));
+        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f, Enabled: %b", gamepadManager.getForceArmRightMotor(), armRightMotor!=null));
 
         //TODO: 0=0degree, 1=180degree, 0.5=90degree
-        MotionExceptions.setPositionWithException(leftFrontServo, 0.5);
+        MotionExceptions.setPositionWithException(leftFrontServo, gamepadManager.getForceFrontLeftServo());
 //        leftFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
-        MotionExceptions.setPositionWithException(rightFrontServo, 0.5);
+        MotionExceptions.setPositionWithException(rightFrontServo, gamepadManager.getForceFrontRightServo());
 //        rightFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
-        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.2s", gamepadManager.getForceFrontLeftServo()));
-        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.2s", gamepadManager.getForceFrontRightServo()));
+        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
+        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
 
         //touch
-        if (MotionExceptions.getStateWithException(touch)) {
-//        if (touch.getState()) {
-            telemetry.addData("Touch", "Is Not Pressed");
-        } else {
-            telemetry.addData("Touch", "Is Pressed");
-        }
+        MotionExceptions.setModeWithException(touch, DigitalChannel.Mode.INPUT);
+        telemetry.addData("Touch", String.format("touch: %b, Enabled: %b", !MotionExceptions.getStateWithException(touch), touch!=null));
 
 
         //distance
 //        telemetry.addData("Distance", String.format("%.01f mm", leftDistance.getDistance(DistanceUnit.MM)));
 
-        telemetry.addData("Distance", String.format("%.01f cm", MotionExceptions.getDistanceWithException(leftDistance, DistanceUnit.CM)));
+        telemetry.addData("Distance", String.format("leftDistance: %.01f cm, Enabled: %b", MotionExceptions.getDistanceWithException(leftDistance, DistanceUnit.CM), leftDistance!=null));
 //        telemetry.addData("Distance", String.format("%.01f cm", leftDistance.getDistance(DistanceUnit.CM)));
 
 //        telemetry.addData("Distance", String.format("%.01f m", leftDistance.getDistance(DistanceUnit.METER)));
 //        telemetry.addData("Distance", String.format("%.01f in", leftDistance.getDistance(DistanceUnit.INCH)));
 //        telemetry.addData("Distance", String.format("%.01f mm", rightDistance.getDistance(DistanceUnit.MM)));
 
-        telemetry.addData("Distance", String.format("%.01f cm", MotionExceptions.getDistanceWithException(rightDistance, DistanceUnit.CM)));
+        telemetry.addData("Distance", String.format("rightDistance: %.01f cm, Enabled: %b", MotionExceptions.getDistanceWithException(rightDistance, DistanceUnit.CM), rightDistance!=null));
 //        telemetry.addData("Distance", String.format("%.01f cm", rightDistance.getDistance(DistanceUnit.CM)));
 
 //        telemetry.addData("Distance", String.format("%.01f m", rightDistance.getDistance(DistanceUnit.METER)));
@@ -237,10 +245,10 @@ public class MotionManager {
         leftBackWheel.setPower(gamepadManager.getForceBackLeftMotor());
         rightBackWheel.setPower(gamepadManager.getForceBackRightMotor());
 
-        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f", gamepadManager.getForceFrontLeftMotor()));
-        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f", gamepadManager.getForceFrontRightMotor()));
-        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f", gamepadManager.getForceBackLeftMotor()));
-        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f", gamepadManager.getForceBackRightMotor()));
+        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontLeftMotor(), leftFrontWheel!=null));
+        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontRightMotor(), rightFrontWheel!=null));
+        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackLeftMotor(), leftBackWheel!=null));
+        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackRightMotor(), rightBackWheel!=null));
 
         if (Configuration.ENCODER) {
             liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -255,20 +263,21 @@ public class MotionManager {
 
         liftMotor.setPower(0.75); //TODO: check power
         liftMotor.setTargetPosition(Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor()); //TODO: make sure the motor is from andymark
-        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f", gamepadManager.getForceLiftMotor()));
+        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f, Enabled: %b", gamepadManager.getForceLiftMotor(), liftMotor!=null));
 
         armLeftMotor.setPower(gamepadManager.getForceArmLeftMotor());
         armRightMotor.setPower(gamepadManager.getForceArmRightMotor());
-        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f", gamepadManager.getForceArmLeftMotor()));
-        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f", gamepadManager.getForceArmRightMotor()));
+        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f, Enabled: %b", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null));
+        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f, Enabled: %b", gamepadManager.getForceArmRightMotor(), armRightMotor!=null));
 
         //TODO: 0=0degree, 1=180degree, 0.5=90degree
         leftFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
         rightFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
-        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.2s", gamepadManager.getForceFrontLeftServo()));
-        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.2s", gamepadManager.getForceFrontRightServo()));
+        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.2s, Enabled: %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
+        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.2s, Enabled: %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
 
         //touch
+        touch.setMode(DigitalChannel.Mode.INPUT);
         if (touch.getState()) {
             telemetry.addData("Touch", "Is Not Pressed");
         } else {
