@@ -34,15 +34,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
-import team13813.util.Configuration;
+import team13813.io.FileSerialization;
 import team13813.io.GamepadManager;
 import team13813.motion.MotionManager;
-import team13813.state.State;
-import team13813.io.FileSerialization;
 import team13813.state.GoldPositions;
+import team13813.state.State;
+import team13813.util.Configuration;
 import team13813.vision.VisionManager;
 
 /**
@@ -133,7 +132,7 @@ public class KokiAutoNext extends OpMode {
 
     @Override
     public void start() {
-        if (Configuration.getGoldPosition() == GoldPositions.UNKNOWN) throw new InvalidParameterException("GoldPositions cannot be 'UNKNOWN'");
+//        if (Configuration.getGoldPosition() == GoldPositions.UNKNOWN) throw new InvalidParameterException("GoldPositions cannot be 'UNKNOWN'");
         visionManager.disable();
         resetStartTime();
         if (Configuration.getState() == State.AUTONOMOUS) {
@@ -144,6 +143,7 @@ public class KokiAutoNext extends OpMode {
 
     @Override
     public void loop() {
+        telemetry.addData("Record", "timeElapsed = %f", time);
         if (Configuration.getState() == State.CONTROL) {
             gamepadManager.update(gamepad1, gamepad2);
         } else if (Configuration.getState() == State.RECORDING) {
@@ -158,7 +158,8 @@ public class KokiAutoNext extends OpMode {
             gamepadManager.update(fakeGamepad1, fakeGamepad2);
             Configuration.gamepadsTimeStream.remove(0);
         }
-        motionManager.update(gamepadManager);
+        motionManager.updateWithException(gamepadManager);
+//        motionManager.update(gamepadManager);
         telemetry.update();
     }
 
@@ -167,7 +168,7 @@ public class KokiAutoNext extends OpMode {
         if (Configuration.getState() == State.RECORDING) {
             FileSerialization.save(hardwareMap.appContext, Configuration.getFileName(), savingGamepadStream);
         }
-        telemetry.addData("Time", "time = %d", time);
+        telemetry.addData("Time", "time = %f", time);
         telemetry.update();
     }
 

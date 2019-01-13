@@ -15,16 +15,16 @@ public class Configuration {
     /*
         String Initialization
      */
-    public static final String FRONT_LEFT_MOTOR = "";
-    public static final String FRONT_RIGHT_MOTOR = "";
-    public static final String BACK_LEFT_MOTOR = "";
-    public static final String BACK_RIGHT_MOTOR = "";
-    public static final String ARM_LEFT_MOTOR = "";
-    public static final String ARM_RIGHT_MOTOR = "";
-    public static final String LIFT_MOTOR = "";
+    public static final String FRONT_LEFT_MOTOR = "dm1";
+    public static final String FRONT_RIGHT_MOTOR = "dm0";
+    public static final String BACK_LEFT_MOTOR = "dm2";
+    public static final String BACK_RIGHT_MOTOR = "dm3";
+    public static final String ARM_LEFT_MOTOR = "um1";
+    public static final String ARM_RIGHT_MOTOR = "um2";
+    public static final String LIFT_MOTOR = "um3";
 
-    public static final String FRONT_LEFT_SERVO = "";
-    public static final String FRONT_RIGHT_SERVO = "";
+    public static final String FRONT_LEFT_SERVO = "us0";
+    public static final String FRONT_RIGHT_SERVO = "us1";
 
     public static final String LEFT_DISTANCE_SENSOR = "";
     public static final String RIGHT_DISTANCE_SENSOR = "";
@@ -42,9 +42,10 @@ public class Configuration {
     /*
         Settings
      */
-    public static final MasterVision.TFLiteAlgorithm INFER = MasterVision.TFLiteAlgorithm.INFER_NONE;
+    public static final MasterVision.TFLiteAlgorithm INFER = MasterVision.TFLiteAlgorithm.INFER_RIGHT;
     public static final Integer maximumStream = 5;
 
+    public static final boolean ENCODER = false;
     public static final Integer TETRIX_TICKS_PER_REV = 1440;
     public static final Integer ANDYMARK_TICKS_PER_REV = 1120;
 
