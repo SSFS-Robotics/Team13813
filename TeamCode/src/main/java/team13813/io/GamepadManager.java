@@ -6,6 +6,12 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import team13813.util.Configuration;
 
 public class GamepadManager implements Serializable, Cloneable {
 
@@ -26,6 +32,7 @@ public class GamepadManager implements Serializable, Cloneable {
      */
     private float forceFrontLeftServo;
     private float forceFrontRightServo;
+    private float forceClipServo = 0.5f;
 
     private transient Telemetry telemetry;
 
@@ -42,15 +49,66 @@ public class GamepadManager implements Serializable, Cloneable {
             Left Stick: control straight move
             Right Stick: control straight turn
           */
-        float LF = gp1.left_stick_y - gp1.left_stick_x;
-        float RF = gp1.right_stick_y + gp1.left_stick_x;
-        float LB = gp1.left_stick_y + gp1.left_stick_x;
-        float RB = gp1.right_stick_y - gp1.left_stick_x;
+//        float LF =                      gp1.left_stick_y - gp1.left_stick_x;
+//        float RF = gp1.right_stick_y + gp1.left_stick_y + gp1.left_stick_x;
+//        float LB =                      gp1.left_stick_y + gp1.left_stick_x;
+//        float RB = gp1.right_stick_y + gp1.left_stick_y - gp1.left_stick_x;
+
+        // straight movement + rotation
+        float LF = gp1.left_stick_y + gp1.left_stick_x - gp1.right_stick_y;
+        float RF = gp1.left_stick_y - gp1.left_stick_x + gp1.right_stick_y;
+        float LB = gp1.left_stick_y - gp1.left_stick_x - gp1.right_stick_y;
+        float RB = gp1.left_stick_y + gp1.left_stick_x + gp1.right_stick_y;
+
+        // when first gamepad is not controlling movement, second gamepad will take over
+        if (LF == 0 && RF == 0 && LB == 0 && RB == 0) {
+            LF = gp2.left_stick_y + gp2.left_stick_x - gp2.right_stick_y;
+            RF = gp2.left_stick_y - gp2.left_stick_x + gp2.right_stick_y;
+            LB = gp2.left_stick_y - gp2.left_stick_x - gp2.right_stick_y;
+            RB = gp2.left_stick_y + gp2.left_stick_x + gp2.right_stick_y;
+        }
+
+        Float[] decMax = {Math.abs(LF), Math.abs(RF), Math.abs(LB), Math.abs(RB)};
+        List<Float> a = new ArrayList<>(Arrays.asList(decMax));
+        float max = Range.clip(Collections.max(a), 1f, Float.MAX_VALUE);
+
+        LF = (LF / max) * Configuration.ABSOLUTE_SPEED;
+        RF = (RF / max) * Configuration.ABSOLUTE_SPEED;
+        LB = (LB / max) * Configuration.ABSOLUTE_SPEED;
+        RB = (RB / max) * Configuration.ABSOLUTE_SPEED;
+
         //TODO: adjust sign
-        forceFrontLeftMotor = Range.clip(LF, -1, 1);
-        forceFrontRightMotor = Range.clip(RF, -1, 1);
-        forceBackLeftMotor = Range.clip(LB, -1, 1);
-        forceBackRightMotor = Range.clip(RB, -1, 1);
+        forceFrontLeftMotor = Range.clip(LF, -1f, 1f);
+        forceFrontRightMotor = Range.clip(RF, -1f, 1f);
+        forceBackLeftMotor = Range.clip(LB, -1f, 1f);
+        forceBackRightMotor = Range.clip(RB, -1f, 1f);
+        /*
+            To the Left:
+            V------A
+
+
+            A------V
+
+            To the Right:
+            A------V
+
+
+            V------A
+
+            To Left Back -> Right Front
+            V------0        A------0
+
+
+            0------V        0------A
+
+            To Left Front -> Right Back
+            0------A        0------V
+
+
+            A------0        V------0
+
+         */
+
 
 //        /*
 //            for Two Wheels
@@ -98,6 +156,13 @@ public class GamepadManager implements Serializable, Cloneable {
         forceFrontLeftServo = Range.clip(-rollOutLeft + rollInLeft, -1, 1)/2.0f+0.5f; // (0, 0.5)
         forceFrontRightServo = Range.clip(-rollOutRight + rollInRight, -1, 1)/2.0f+0.5f; // (0, 0.5)
 
+        if (gp1.x && !gp1.y) {
+            forceClipServo = 0;
+        } else if (!gp1.x && gp1.y) {
+            forceClipServo = 1;
+        }
+        forceClipServo = Range.clip(forceClipServo, -1, 1);
+
         //TODO: adjust sign
 
     }
@@ -137,11 +202,14 @@ public class GamepadManager implements Serializable, Cloneable {
         return forceFrontRightServo;
     }
 
+    public float getForceClipServo() {
+        return forceClipServo;
+    }
+
     @Override
     public GamepadManager clone() {
         try{
-            GamepadManager gamepadManager = (GamepadManager)super.clone();
-            return gamepadManager;
+            return (GamepadManager)super.clone();
         }catch(CloneNotSupportedException e) {
             e.printStackTrace();
         }

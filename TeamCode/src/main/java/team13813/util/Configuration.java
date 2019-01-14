@@ -24,6 +24,7 @@ public class Configuration {
 
     public static final String FRONT_LEFT_SERVO = "ds0";
     public static final String FRONT_RIGHT_SERVO = "ds1";
+    public static final String CLIP_SERVO = "ds2";
 
     public static final String LEFT_DISTANCE_SENSOR = "";
     public static final String RIGHT_DISTANCE_SENSOR = "";
@@ -47,6 +48,7 @@ public class Configuration {
     public static final boolean ENCODER = false; //TODO update encoder
     public static final Integer TETRIX_TICKS_PER_REV = 1440;
     public static final Integer ANDYMARK_TICKS_PER_REV = 1120;
+    public static final float ABSOLUTE_SPEED = 1.0f;
 
     /*
         Variables
@@ -57,7 +59,7 @@ public class Configuration {
         assert getSavingPath() != null;
         return getSavingPath().toString() + "_LOG.txt";
     }
-    public static SavingPath getSavingPath() {
+    private static SavingPath getSavingPath() {
         switch (team) {
             case RED:
                 switch (facing) {

@@ -35,6 +35,7 @@ public class MotionManager {
      */
     private Servo leftFrontServo = null;
     private Servo rightFrontServo = null;
+    private Servo clipServo = null;
 
     /*
         SENSOR
@@ -66,6 +67,7 @@ public class MotionManager {
 
         this.leftFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_LEFT_SERVO);
         this.rightFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_RIGHT_SERVO);
+        this.clipServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.CLIP_SERVO);
 
         this.touch = MotionExceptions.getWithException(hardwareMap, DigitalChannel.class, Configuration.TOUCH_SENSOR);
 
@@ -164,13 +166,13 @@ public class MotionManager {
         telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f, Enabled: %b", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null));
         telemetry.addData("ArmPower", String.format("armRightMotor: %.2f, Enabled: %b", gamepadManager.getForceArmRightMotor(), armRightMotor!=null));
 
-        //TODO: 0=0degree, 1=180degree, 0.5=90degree
+        //TODO: 0=0degree, 1=180degree, 0.5=90degree, 0.5=stop
         MotionExceptions.setPositionWithException(leftFrontServo, gamepadManager.getForceFrontLeftServo());
-//        leftFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
         MotionExceptions.setPositionWithException(rightFrontServo, gamepadManager.getForceFrontRightServo());
-//        rightFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
+        MotionExceptions.setPositionWithException(clipServo, gamepadManager.getForceClipServo());
         telemetry.addData("ServoPosition", String.format("leftFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
         telemetry.addData("ServoPosition", String.format("rightFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
+        telemetry.addData("ServoPosition", String.format("clipServo: %.4s, Enabled: %b", gamepadManager.getForceClipServo(), clipServo!=null));
 
         //touch
         MotionExceptions.setModeWithException(touch, DigitalChannel.Mode.INPUT);
@@ -212,99 +214,6 @@ public class MotionManager {
 //        telemetry.addData("Red  ", color.red());
 //        telemetry.addData("Green", color.green());
 //        telemetry.addData("Blue ", color.blue());
-        telemetry.addData("Hue", hsvValues[0]);
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-            }
-        });
-    }
-
-    public void update(GamepadManager gamepadManager) { // use gamepad command, sensor input, vision input, and Configuration to control robot
-        /*
-            RUN_USING_ENCODER: set power
-            RUN_WITHOUT_ENCODER: set current
-            RUN_TO_POSITION: run to pos and hold. Note that you still need to set mode to RUN_USING_ENCODER first and setPower()
-            STOP_AND_RESET_ENCODER: stop moving and reset encoder value to 0
-
-            setTargetPosition = revolution * ticks/revolution
-         */
-        if (Configuration.ENCODER) {
-            leftFrontWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightFrontWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftBackWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightBackWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        } else {
-            leftFrontWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightFrontWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftBackWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightBackWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        leftFrontWheel.setPower(gamepadManager.getForceFrontLeftMotor());
-        rightFrontWheel.setPower(gamepadManager.getForceFrontRightMotor());
-        leftBackWheel.setPower(gamepadManager.getForceBackLeftMotor());
-        rightBackWheel.setPower(gamepadManager.getForceBackRightMotor());
-
-        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontLeftMotor(), leftFrontWheel!=null));
-        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontRightMotor(), rightFrontWheel!=null));
-        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackLeftMotor(), leftBackWheel!=null));
-        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackRightMotor(), rightBackWheel!=null));
-
-        if (Configuration.ENCODER) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            armRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        } else {
-            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
-        liftMotor.setPower(0.75); //TODO: check power
-        liftMotor.setTargetPosition(Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor()); //TODO: make sure the motor is from andymark
-        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f, Enabled: %b", gamepadManager.getForceLiftMotor(), liftMotor!=null));
-
-        armLeftMotor.setPower(gamepadManager.getForceArmLeftMotor());
-        armRightMotor.setPower(gamepadManager.getForceArmRightMotor());
-        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f, Enabled: %b", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null));
-        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f, Enabled: %b", gamepadManager.getForceArmRightMotor(), armRightMotor!=null));
-
-        //TODO: 0=0degree, 1=180degree, 0.5=90degree
-        leftFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
-        rightFrontServo.setPosition(0.5); //TODO: it seems like 0.5 will cause continuous rotational servo to stop. I am not sure about that. Try 0.5 out before implementing other things.
-        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.2s, Enabled: %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
-        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.2s, Enabled: %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
-
-        //touch
-        touch.setMode(DigitalChannel.Mode.INPUT);
-        if (touch.getState()) {
-            telemetry.addData("Touch", "Is Not Pressed");
-        } else {
-            telemetry.addData("Touch", "Is Pressed");
-        }
-
-
-        //distance
-//        telemetry.addData("Distance", String.format("%.01f mm", leftDistance.getDistance(DistanceUnit.MM)));
-        telemetry.addData("Distance", String.format("%.01f cm", leftDistance.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("Distance", String.format("%.01f m", leftDistance.getDistance(DistanceUnit.METER)));
-//        telemetry.addData("Distance", String.format("%.01f in", leftDistance.getDistance(DistanceUnit.INCH)));
-//        telemetry.addData("Distance", String.format("%.01f mm", rightDistance.getDistance(DistanceUnit.MM)));
-        telemetry.addData("Distance", String.format("%.01f cm", rightDistance.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("Distance", String.format("%.01f m", rightDistance.getDistance(DistanceUnit.METER)));
-//        telemetry.addData("Distance", String.format("%.01f in", rightDistance.getDistance(DistanceUnit.INCH)));
-
-        // TODO: read sensor, encoder
-        //color
-        Color.RGBToHSV((int) (color.red() * 255),
-                (int) (color.green() * 255),
-                (int) (color.blue() * 255),
-                hsvValues);
-        telemetry.addData("Alpha", color.alpha());
-        telemetry.addData("Red  ", color.red());
-        telemetry.addData("Green", color.green());
-        telemetry.addData("Blue ", color.blue());
         telemetry.addData("Hue", hsvValues[0]);
         relativeLayout.post(new Runnable() {
             public void run() {
