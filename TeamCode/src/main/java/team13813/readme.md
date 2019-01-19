@@ -1,126 +1,56 @@
-# SSFS Robotics 13813
+# SSFS Robotics 13813 - Autonomous Tutorial
+Before you read this instruction, you need to know (or do) the following things. If you don't know how to do then, please watch my video on the Google Drive (Video Tutorial Folder). You should probably speed up the video because there are a lot of interuptions...  
+1. Know: How to start the robot's TeleOp Mode
+2. Know: How to set up the gamepads
+3. Know: How to score in Autonomous Mode (things you need to do to score the maximum points possible)
+4. Know: How to drive the robot's TeleOp Mode with no mistakes (don't break the collecting system with the arm)
+5. Know: The rules of Autonomous Mode (what you cannot do) <- well this is not that necessary.
+6. Do: Watch some actual autonomous modes so that you know the process (at least 3 games that scored well) <- you must do it. You will probably discover some problem problems and strategies like:
+ - You sometimes will collide with your teammate: try to avoid the path that your teammate is most likely to take.
+ - You will discover strategies like: you can use the wall of the field to adjust the position of the robot when each time the robot end the autonomous mode with a location that is little bit off than you expected.
+ - You will discover that you get points in autonomous when your robot can touch - but not completely go into - the crater, unlike how the game-rule-video says.
+7. Do: Have the robot 100% prepared (move the center of the weight, put the surgery tube with correct tension, add some surgery tude in the front of the robot so that the robot can move the gold, ext...). Make sure the robot is 18inch by 18in by 18in, if not, remove the white shoe tie so that at least one point it will be within the limit. They only check the dimension when we enter the room which means they may not notice negligible changes in dimension.
+8. Do: Have everything else ready: like the team marker...  
 
-
-```
-## TeamCode Module
-
-Welcome!
-
-This module, TeamCode, is the place where you will write/paste the code for your team's
-robot controller App. This module is currently empty (a clean slate) but the
-process for adding OpModes is straightforward.
-
-## Creating your own OpModes
-
-The easiest way to create your own OpMode is to copy a Sample OpMode and make it your own.
-
-Sample opmodes exist in the FtcRobotController module.
-To locate these samples, find the FtcRobotController module in the "Project/Android" tab.
-
-Expand the following tree elements:
- FtcRobotController / java / org.firstinspires.ftc.robotcontroller / external / samples
-
-A range of different samples classes can be seen in this folder.
-The class names follow a naming convention which indicates the purpose of each class.
-The full description of this convention is found in the samples/sample_convention.md file.
-
-A brief synopsis of the naming convention is given here:
-The prefix of the name will be one of the following:
-
-* Basic:    This is a minimally functional OpMode used to illustrate the skeleton/structure
-            of a particular style of OpMode.  These are bare bones examples.
-* Sensor:   This is a Sample OpMode that shows how to use a specific sensor.
-            It is not intended as a functioning robot, it is simply showing the minimal code
-            required to read and display the sensor values.
-* Hardware: This is not an actual OpMode, but a helper class that is used to describe
-            one particular robot's hardware devices: eg: for a Pushbot.  Look at any
-            Pushbot sample to see how this can be used in an OpMode.
-            Teams can copy one of these to create their own robot definition.
-* Pushbot:  This is a Sample OpMode that uses the Pushbot robot structure as a base.
-* Concept:	This is a sample OpMode that illustrates performing a specific function or concept.
-            These may be complex, but their operation should be explained clearly in the comments,
-            or the header should reference an external doc, guide or tutorial.
-* Library:  This is a class, or set of classes used to implement some strategy.
-            These will typically NOT implement a full OpMode.  Instead they will be included
-            by an OpMode to provide some stand-alone capability.
-
-Once you are familiar with the range of samples available, you can choose one to be the
-basis for your own robot.  In all cases, the desired sample(s) needs to be copied into
-your TeamCode module to be used.
-
-This is done inside Android Studio directly, using the following steps:
-
- 1) Locate the desired sample class in the Project/Android tree.
-
- 2) Right click on the sample class and select "Copy"
-
- 3) Expand the  TeamCode / java folder
-
- 4) Right click on the org.firstinspires.ftc.teamcode folder and select "Paste"
-
- 5) You will be prompted for a class name for the copy.
-    Choose something meaningful based on the purpose of this class.
-    Start with a capital letter, and remember that there may be more similar classes later.
-
-Once your copy has been created, you should prepare it for use on your robot.
-This is done by adjusting the OpMode's name, and enabling it to be displayed on the
-Driver Station's OpMode list.
-
-Each OpMode sample class begins with several lines of code like the ones shown below:
-
-```
- @TeleOp(name="Template: Linear OpMode", group="Linear Opmode")
- @Disabled
-```
-
-The name that will appear on the driver station's "opmode list" is defined by the code:
- ``name="Template: Linear OpMode"``
-You can change what appears between the quotes to better describe your opmode.
-The "group=" portion of the code can be used to help organize your list of OpModes.
-
-As shown, the current OpMode will NOT appear on the driver station's OpMode list because of the
-  ``@Disabled`` annotation which has been included.
-This line can simply be deleted , or commented out, to make the OpMode visible.
-
-
-
-## ADVANCED Multi-Team App management:  Cloning the TeamCode Module
-
-In some situations, you have multiple teams in your club and you want them to all share
-a common code organization, with each being able to *see* the others code but each having
-their own team module with their own code that they maintain themselves.
-
-In this situation, you might wish to clone the TeamCode module, once for each of these teams.
-Each of the clones would then appear along side each other in the Android Studio module list,
-together with the FtcRobotController module (and the original TeamCode module).
-
-Selective Team phones can then be programmed by selecting the desired Module from the pulldown list
-prior to clicking to the green Run arrow.
-
-Warning:  This is not for the inexperienced Software developer.
-You will need to be comfortable with File manipulations and managing Android Studio Modules.
-These changes are performed OUTSIDE of Android Studios, so close Android Studios before you do this.
+# The Structure of the Program
+The autonomous mode consists of 4 modes.
+ - `WallbreakerKokiAutoNext`
+ - `WallfacerKokiAutoNext`
+ - `SaveWallbreakerKokiAutoNext`
+ - `SaveWallfacerKokiAutoNext`  
  
-Also.. Make a full project backup before you start this :)
+Don't ask me why they have those strange names. Emmm... May be I should explain it:
+ - Everything with `Save` means this is in save mode: it will save whatever you do on your gamepad once you press start.
+ - Everything without `Save` would run the operation you saved.
+ - Everything with `Wallfacer` is the position facing the crater. (no matter which team you are because they are symmetrical)
+ - Everything with `Wallbreaker` is the position facing the home base. (no matter which team you are because they are symmetrical)
+ - `KokiAutoNext` just mean it is a Autonomous - not an TeleOp mode. The difference between `Autonomous Mode` and `TeleOp Mode` is whether you have the time limit of 30 second. People generally use `TeleOp Mode` for human control period and `Autonomous Mode` for autonomous period.  
 
-To clone TeamCode, do the following:
+# How the Autonomous Work
+Our autonomous work by saving files (that contain all the recorded, and processed gamepad inputs) using two `Save` modes.  
+There should be in total 6 files to save according to 2 different locations of the robot and 3 different locations of the minerals.  
 
-Note: Some names start with "Team" and others start with "team".  This is intentional.
+## How the program will save the instructions
+ 1. When you press `init`, the camera will open to detect the first two minerals on the left side of the robot. Because we know that one of the three will be gold, knowing only the left two will make the program to have enough knowledge to know which of the three position the gold is. Please don't let the camera see all of the three minerals because it will likely to break the program. You can see the detection result from the phone on the robot to see if the robot correctly identifies the two minerals.
+ 2. When you press `start`, the program will record everything you do on both gamepads. After you press start, the debug message should pop out something like `Getting file in {TEAM}{POSITION}{WHERE_GOLD_IS}_LOG.txt; `. The `{TEAM}` should always be `BLUE` because it does not matter. Make sure the `{POSITION}` and the `{WHERE_GOLD_IS}` matches the actual position of your robot (whether it is facing the Crater) and the actual position of the gold mineral.
+ 3. When you press `stop`, the file will be saved to a path. It will overwrite the file if it exists.
+ 
+## What you should do to set up
+ 1. Start the robot, but not the program.
+ 2. Place the Robot in one of the two position (hanging up on the hook).
+ 3. Place the gold mineral in one of the three position (left, center, right) and the silver minerals in two other positions.
+ 4. Choose `SaveWallbreakerKokiAutoNext` or `SaveWallfacerKokiAutoNext` (it depends on where you hang the robot)
+ 5. Set up your gamepad and everything.
+ 6. Hit init ONCE. Wait a few second for the program to initiate.
+ 7. Two people stand in position like an actual game.
+ 8. When you are ready, press start. There will be a timer of 30 seconds after you press start.
+ 9. Drive the robot to score point using the most conservative way. After you remove the gold and deposit the team marker, go to the opponent's crater if you are a `Wallbreaker` and go to alliance's crater if you are a `Wallfacer`. This ensures that two robot does not hit each other in autonomous period. For more details and things to take care of, watch more good and bad gameplays to see how each team succeed or failed.
+ 10. Stop the mode if everything that need to be done is finished in 30s. This step is not necessary because you have 30s limit. But without this step may cause the phone to generate some errors. Although the errors goes away after less than 30s or restart the program, it is not safe...
+ 11. Test the autonomous program with exact setting when you start the save mode. (minerals in place, team marker in place, hanging)
+ 12. If everything works fine and the robot scored everything slowly but surely. Good! You set up the first Autonomous mode, 5 to go.
+ 13. Repeat above another 3-1=2 times but with different position of gold mineral.
+ 14. Repeat above another 2-1=1 time but with different position of the robot.
+ 15. You should have in total save 6 different operations in 2 modes.
 
-1)  Using your operating system file management tools, copy the whole "TeamCode"
-    folder to a sibling folder with a corresponding new name, eg: "Team0417".
-
-2)  In the new Team0417 folder, delete the TeamCode.iml file.
-
-3)  the new Team0417 folder, rename the "src/main/java/org/firstinspires/ftc/teamcode" folder
-    to a matching name with a lowercase 'team' eg:  "team0417".
-
-4)  In the new Team0417/src/main folder, edit the "AndroidManifest.xml" file, change the line that contains
-         package="org.firstinspires.ftc.teamcode"
-    to be
-         package="org.firstinspires.ftc.team0417"
-
-5)  Add:    include ':Team0417' to the "/settings.gradle" file.
-    
-6)  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
-```
+There may be some grammar mistakes, but don't be picky. :)  
+If you have any question, text me and WeChat me.

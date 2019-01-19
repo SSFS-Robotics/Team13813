@@ -16,15 +16,15 @@ public class Configuration {
      */
     public static final String FRONT_LEFT_MOTOR = "dm1";
     public static final String FRONT_RIGHT_MOTOR = "dm0";
-    public static final String BACK_LEFT_MOTOR = "dm2";
+    public static final String BACK_LEFT_MOTOR = "um3";
     public static final String BACK_RIGHT_MOTOR = "dm3";
     public static final String ARM_LEFT_MOTOR = "um0";
     public static final String ARM_RIGHT_MOTOR = "um1";
     public static final String LIFT_MOTOR = "um2";
 
-    public static final String FRONT_LEFT_SERVO = "ds0";
-    public static final String FRONT_RIGHT_SERVO = "ds1";
-    public static final String CLIP_SERVO = "ds2";
+    public static final String FRONT_LEFT_SERVO = "ds1";
+    public static final String FRONT_RIGHT_SERVO = "ds0";
+    public static final String CLIP_SERVO = "us0";
 
     public static final String LEFT_DISTANCE_SENSOR = "";
     public static final String RIGHT_DISTANCE_SENSOR = "";
@@ -45,7 +45,7 @@ public class Configuration {
     public static final MasterVision.TFLiteAlgorithm INFER = MasterVision.TFLiteAlgorithm.INFER_RIGHT;
     public static final Integer maximumStream = 5;
 
-    public static final boolean ENCODER = false; //TODO update encoder
+    public static final boolean ENCODER = true; //TODO update encoder
     public static final Integer TETRIX_TICKS_PER_REV = 1440;
     public static final Integer ANDYMARK_TICKS_PER_REV = 1120;
     public static final float ABSOLUTE_SPEED = 1.0f;

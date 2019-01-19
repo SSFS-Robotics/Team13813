@@ -138,7 +138,7 @@ public class MotionManager {
         if (Configuration.ENCODER) {
             MotionExceptions.setModeWithException(liftMotor, DcMotor.RunMode.RUN_USING_ENCODER);
 //            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            MotionExceptions.setModeWithException(liftMotor, DcMotor.RunMode.RUN_TO_POSITION);
+//            MotionExceptions.setModeWithException(liftMotor, DcMotor.RunMode.RUN_TO_POSITION);
 //            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             MotionExceptions.setModeWithException(armLeftMotor, DcMotor.RunMode.RUN_USING_ENCODER);
 //            armLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -153,7 +153,7 @@ public class MotionManager {
 //            armRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        MotionExceptions.setPowerWithException(liftMotor, 0.75);
+        MotionExceptions.setPowerWithException(liftMotor, gamepadManager.getForceLiftMotor());
 //        liftMotor.setPower(0.75); //TODO: check power
         MotionExceptions.setTargetPositionWithException(liftMotor, Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor());
 //        liftMotor.setTargetPosition(Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor()); //TODO: make sure the motor is from andymark
