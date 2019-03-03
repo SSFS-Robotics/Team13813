@@ -94,4 +94,11 @@ public class MotionExceptions {
 
         }
     }
+    public static int getCurrentPositionWithException(DcMotor motor) {
+        try {
+            return motor.getCurrentPosition();
+        } catch (NullPointerException e) {
+            return 0;
+        }
+    }
 }

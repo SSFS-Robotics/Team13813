@@ -36,6 +36,7 @@ public class MotionManager {
     private Servo leftFrontServo = null;
     private Servo rightFrontServo = null;
     private Servo clipServo = null;
+    private Servo touchServo = null;
 
     /*
         SENSOR
@@ -68,6 +69,7 @@ public class MotionManager {
         this.leftFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_LEFT_SERVO);
         this.rightFrontServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.FRONT_RIGHT_SERVO);
         this.clipServo = MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.CLIP_SERVO);
+        this.touchServo= MotionExceptions.getWithException(hardwareMap, Servo.class, Configuration.TOUCH_SERVO);
 
         this.touch = MotionExceptions.getWithException(hardwareMap, DigitalChannel.class, Configuration.TOUCH_SENSOR);
 
@@ -103,23 +105,19 @@ public class MotionManager {
 
     public void updateWithException(GamepadManager gamepadManager) {
         if (Configuration.ENCODER) {
-            MotionExceptions.setModeWithException(leftFrontWheel, DcMotor.RunMode.RUN_USING_ENCODER);
-//            leftFrontWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            MotionExceptions.setModeWithException(rightFrontWheel, DcMotor.RunMode.RUN_USING_ENCODER);
-//            rightFrontWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            MotionExceptions.setModeWithException(leftBackWheel, DcMotor.RunMode.RUN_USING_ENCODER);
-//            leftBackWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            MotionExceptions.setModeWithException(rightBackWheel, DcMotor.RunMode.RUN_USING_ENCODER);
-//            rightBackWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            MotionExceptions.setModeWithException(leftFrontWheel, DcMotor.RunMode.RUN_USING_ENCODER);
+//            MotionExceptions.setModeWithException(rightFrontWheel, DcMotor.RunMode.RUN_USING_ENCODER);
+//            MotionExceptions.setModeWithException(leftBackWheel, DcMotor.RunMode.RUN_USING_ENCODER);
+//            MotionExceptions.setModeWithException(rightBackWheel, DcMotor.RunMode.RUN_USING_ENCODER);
+            MotionExceptions.setModeWithException(leftFrontWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            MotionExceptions.setModeWithException(rightFrontWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            MotionExceptions.setModeWithException(leftBackWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            MotionExceptions.setModeWithException(rightBackWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } else {
             MotionExceptions.setModeWithException(leftFrontWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            leftFrontWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             MotionExceptions.setModeWithException(rightFrontWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            rightFrontWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             MotionExceptions.setModeWithException(leftBackWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            leftBackWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             MotionExceptions.setModeWithException(rightBackWheel, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            rightBackWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         MotionExceptions.setPowerWithException(leftFrontWheel, gamepadManager.getForceFrontLeftMotor());
 //        leftFrontWheel.setPower(gamepadManager.getForceFrontLeftMotor());
@@ -130,10 +128,10 @@ public class MotionManager {
         MotionExceptions.setPowerWithException(rightBackWheel, gamepadManager.getForceBackRightMotor());
 //        rightBackWheel.setPower(gamepadManager.getForceBackRightMotor());
 
-        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontLeftMotor(), leftFrontWheel!=null));
-        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f, Enabled: %b", gamepadManager.getForceFrontRightMotor(), rightFrontWheel!=null));
-        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackLeftMotor(), leftBackWheel!=null));
-        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f, Enabled: %b", gamepadManager.getForceBackRightMotor(), rightBackWheel!=null));
+        telemetry.addData("WheelPower", String.format("leftFrontWheel: %.2f %b, Encoder: %3d", gamepadManager.getForceFrontLeftMotor(), leftFrontWheel!=null, MotionExceptions.getCurrentPositionWithException(leftFrontWheel)));
+        telemetry.addData("WheelPower", String.format("rightFrontWheel: %.2f %b, Encoder: %3d", gamepadManager.getForceFrontRightMotor(), rightFrontWheel!=null, MotionExceptions.getCurrentPositionWithException(rightFrontWheel)));
+        telemetry.addData("WheelPower", String.format("leftBackWheel: %.2f %b, Encoder: %3d", gamepadManager.getForceBackLeftMotor(), leftBackWheel!=null, MotionExceptions.getCurrentPositionWithException(leftBackWheel)));
+        telemetry.addData("WheelPower", String.format("rightBackWheel: %.2f %b, Encoder: %3d", gamepadManager.getForceBackRightMotor(), rightBackWheel!=null, MotionExceptions.getCurrentPositionWithException(rightBackWheel)));
 
         if (Configuration.ENCODER) {
             MotionExceptions.setModeWithException(liftMotor, DcMotor.RunMode.RUN_USING_ENCODER);
@@ -157,39 +155,41 @@ public class MotionManager {
 //        liftMotor.setPower(0.75); //TODO: check power
         MotionExceptions.setTargetPositionWithException(liftMotor, Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor());
 //        liftMotor.setTargetPosition(Configuration.ANDYMARK_TICKS_PER_REV * GamepadManager.LIFTING_REVOLUTION * (int) gamepadManager.getForceLiftMotor()); //TODO: make sure the motor is from andymark
-        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f, Enabled: %b", gamepadManager.getForceLiftMotor(), liftMotor!=null));
+        telemetry.addData("LiftPosition", String.format("liftMotor: %.2f %b, Encoder: %3d", gamepadManager.getForceLiftMotor(), liftMotor!=null, MotionExceptions.getCurrentPositionWithException(liftMotor)));
 
         MotionExceptions.setPowerWithException(armLeftMotor, gamepadManager.getForceArmLeftMotor());
 //        armLeftMotor.setPower(gamepadManager.getForceArmLeftMotor());
         MotionExceptions.setPowerWithException(armRightMotor, gamepadManager.getForceArmRightMotor());
 //        armRightMotor.setPower(gamepadManager.getForceArmRightMotor());
-        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f, Enabled: %b", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null));
-        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f, Enabled: %b", gamepadManager.getForceArmRightMotor(), armRightMotor!=null));
+        telemetry.addData("ArmPower", String.format("armLeftMotor: %.2f %b, Encoder: %3d", gamepadManager.getForceArmLeftMotor(), armLeftMotor!=null, MotionExceptions.getCurrentPositionWithException(armLeftMotor)));
+        telemetry.addData("ArmPower", String.format("armRightMotor: %.2f %b, Encoder: %3d", gamepadManager.getForceArmRightMotor(), armRightMotor!=null, MotionExceptions.getCurrentPositionWithException(armRightMotor)));
 
         //TODO: 0=0degree, 1=180degree, 0.5=90degree, 0.5=stop
         MotionExceptions.setPositionWithException(leftFrontServo, gamepadManager.getForceFrontLeftServo());
         MotionExceptions.setPositionWithException(rightFrontServo, gamepadManager.getForceFrontRightServo());
         MotionExceptions.setPositionWithException(clipServo, gamepadManager.getForceClipServo());
-        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
-        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.4s, Enabled: %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
-        telemetry.addData("ServoPosition", String.format("clipServo: %.4s, Enabled: %b", gamepadManager.getForceClipServo(), clipServo!=null));
+        MotionExceptions.setPositionWithException(touchServo, gamepadManager.getForceTouchServo());
+        telemetry.addData("ServoPosition", String.format("leftFrontServo: %.4s %b", gamepadManager.getForceFrontLeftServo(), leftFrontServo!=null));
+        telemetry.addData("ServoPosition", String.format("rightFrontServo: %.4s %b", gamepadManager.getForceFrontRightServo(), rightFrontServo!=null));
+        telemetry.addData("ServoPosition", String.format("clipServo: %.4s %b", gamepadManager.getForceClipServo(), clipServo!=null));
+        telemetry.addData("ServoPosition", String.format("touchServo: %.4s %b", gamepadManager.getForceTouchServo(), touchServo!=null));
 
         //touch
         MotionExceptions.setModeWithException(touch, DigitalChannel.Mode.INPUT);
-        telemetry.addData("Touch", String.format("touch: %b, Enabled: %b", !MotionExceptions.getStateWithException(touch), touch!=null));
+        telemetry.addData("Touch", String.format("touch: %b %b", !MotionExceptions.getStateWithException(touch), touch!=null));
 
 
         //distance
 //        telemetry.addData("Distance", String.format("%.01f mm", leftDistance.getDistance(DistanceUnit.MM)));
 
-        telemetry.addData("Distance", String.format("leftDistance: %.01f cm, Enabled: %b", MotionExceptions.getDistanceWithException(leftDistance, DistanceUnit.CM), leftDistance!=null));
+        telemetry.addData("Distance", String.format("leftDistance: %.01f cm %b", MotionExceptions.getDistanceWithException(leftDistance, DistanceUnit.CM), leftDistance!=null));
 //        telemetry.addData("Distance", String.format("%.01f cm", leftDistance.getDistance(DistanceUnit.CM)));
 
 //        telemetry.addData("Distance", String.format("%.01f m", leftDistance.getDistance(DistanceUnit.METER)));
 //        telemetry.addData("Distance", String.format("%.01f in", leftDistance.getDistance(DistanceUnit.INCH)));
 //        telemetry.addData("Distance", String.format("%.01f mm", rightDistance.getDistance(DistanceUnit.MM)));
 
-        telemetry.addData("Distance", String.format("rightDistance: %.01f cm, Enabled: %b", MotionExceptions.getDistanceWithException(rightDistance, DistanceUnit.CM), rightDistance!=null));
+        telemetry.addData("Distance", String.format("rightDistance: %.01f cm %b", MotionExceptions.getDistanceWithException(rightDistance, DistanceUnit.CM), rightDistance!=null));
 //        telemetry.addData("Distance", String.format("%.01f cm", rightDistance.getDistance(DistanceUnit.CM)));
 
 //        telemetry.addData("Distance", String.format("%.01f m", rightDistance.getDistance(DistanceUnit.METER)));

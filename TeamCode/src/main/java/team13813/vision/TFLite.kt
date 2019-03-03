@@ -1,6 +1,7 @@
 package team13813.vision
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
 import team13813.state.GoldPositions
 
@@ -30,13 +31,35 @@ class TFLite(private val master: MasterVision) {
     internal fun updateSampleOrder() {
         if (tfod != null) {
             val updatedRecognitions = tfod?.updatedRecognitions
+
+            val sorted = ArrayList<Recognition>()
+            var first_score = 0f
+            var second_score = 0f
             if (updatedRecognitions != null) {
-                if (updatedRecognitions.size == 3 || updatedRecognitions.size == 2) {
+                if (updatedRecognitions.size > 2) {
+                    val sortedList = updatedRecognitions.sortedWith(compareByDescending({ it.confidence }))
+//                    sortedList = sortedList.drop(2)
+
+                    for (item in sortedList) {
+                        if (item.confidence > first_score) {
+                            first_score = item.confidence
+                        } else if (item.confidence > second_score) {
+                            second_score = item.confidence
+                        }
+                    }
+                }
+                for (item in updatedRecognitions) {
+                    if (item.confidence >= second_score) {
+                        sorted.add(item)
+                    }
+                }
+
+                if (sorted.size == 3 || sorted.size == 2) {
                     var goldMineralX: Int? = null
                     var silverMineral1X: Int? = null
                     var silverMineral2X: Int? = null
 
-                    for (recognition in updatedRecognitions) {
+                    for (recognition in sorted) {
                         if (recognition.label == LABEL_GOLD_MINERAL)
                             goldMineralX = recognition.left.toInt()
                         else if (silverMineral1X == null)
@@ -46,7 +69,7 @@ class TFLite(private val master: MasterVision) {
                     }
                     when (master.tfLiteAlgorithm) {
                         MasterVision.TFLiteAlgorithm.INFER_NONE -> if (goldMineralX != null && silverMineral1X != null && silverMineral2X != null)
-                            if (updatedRecognitions.size == 3)
+                            if (sorted.size == 3)
                                 lastKnownSampleOrder =
                                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X)
                                             GoldPositions.LEFT
@@ -55,7 +78,7 @@ class TFLite(private val master: MasterVision) {
                                         else
                                             GoldPositions.CENTER
                         MasterVision.TFLiteAlgorithm.INFER_LEFT -> {
-                            if(updatedRecognitions.size == 2) {
+                            if(sorted.size == 2) {
                                 if (goldMineralX == null)
                                     lastKnownSampleOrder = GoldPositions.LEFT
                                 else if (silverMineral1X != null)
@@ -67,7 +90,7 @@ class TFLite(private val master: MasterVision) {
                             }
                         }
                         MasterVision.TFLiteAlgorithm.INFER_RIGHT -> {
-                            if(updatedRecognitions.size == 2) {
+                            if(sorted.size == 2) {
                                 if (goldMineralX == null)
                                     lastKnownSampleOrder = GoldPositions.RIGHT
                                 else if (silverMineral1X != null)

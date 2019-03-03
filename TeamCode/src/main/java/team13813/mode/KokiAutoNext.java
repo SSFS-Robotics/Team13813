@@ -98,11 +98,17 @@ public class KokiAutoNext extends OpMode {
 
     @Override
     public void init() {
+        super.msStuckDetectInit     = 5000;
+        super.msStuckDetectInitLoop = 5000;
+        super.msStuckDetectStart    = 5000;
+        super.msStuckDetectLoop     = 5000;
+        super.msStuckDetectStop     = 10000;
+
         setTeam();
         setFacing();
         setState();
 
-        visionManager = new VisionManager(hardwareMap, Configuration.INFER);
+        visionManager = new VisionManager(hardwareMap, Configuration.INFER, Configuration.flashLight);
         motionManager = new MotionManager(telemetry, hardwareMap);
         gamepadManager = new GamepadManager(telemetry);
         visionManager.start();
@@ -138,15 +144,13 @@ public class KokiAutoNext extends OpMode {
         resetStartTime();
         if (Configuration.getState() == State.AUTONOMOUS) {
             debugMessage = debugMessage + "Getting file in " + Configuration.getFileName() + "; ";
-            Configuration.gamepadsTimeStream = (ArrayList<GamepadManager>) FileSerialization.loadInternal(hardwareMap.appContext, Configuration.getFileName(), telemetry);
-            if (Configuration.gamepadsTimeStream != null) {
-                debugMessage = debugMessage + "Configuration.gamepadsTimeStream != null; ";
+
+            Object _ = FileSerialization.loadInternal(hardwareMap.appContext, Configuration.getFileName(), telemetry);
+            if (_ != null) {
+                Configuration.gamepadsTimeStream = (ArrayList<GamepadManager>) _;
+                debugMessage = debugMessage + "File != null; ";
             } else {
-                if (FileSerialization.loadInternal(hardwareMap.appContext, Configuration.getFileName(), telemetry) != null) {
-                    debugMessage = debugMessage + "Configuration.gamepadsTimeStream == null; Object is not null; ";
-                } else {
-                    debugMessage = debugMessage + "Configuration.gamepadsTimeStream == null; Object is null; ";
-                }
+                debugMessage = debugMessage + "File == null; Object is null; ";
             }
         }
         telemetry.addData("DEBUG", debugMessage);
@@ -162,6 +166,7 @@ public class KokiAutoNext extends OpMode {
             gamepadManager.update(gamepad1, gamepad2);
             Configuration.gamepadsTimeStream.add(gamepadManager.clone());
         } else if (Configuration.getState() == State.AUTONOMOUS && Configuration.gamepadsTimeStream.size() >0) {
+            telemetry.addData("Running Record:", Configuration.getFileName());
             gamepadManager = Configuration.gamepadsTimeStream.get(0);
             Configuration.gamepadsTimeStream.remove(0);
         }
@@ -176,16 +181,12 @@ public class KokiAutoNext extends OpMode {
         if (Configuration.getState() == State.RECORDING) {
             boolean successful = FileSerialization.saveInternal(hardwareMap.appContext, Configuration.getFileName(), Configuration.gamepadsTimeStream, telemetry);
             debugMessage = debugMessage + "Configuration saved in " + Configuration.getFileName() + "; Successful = " + Boolean.toString(successful) + "; ";
-            String s = FileSerialization.readInternal(hardwareMap.appContext, Configuration.getFileName(), telemetry);
-            FileSerialization.setClipboard(hardwareMap.appContext, s);
+//            String s = FileSerialization.readInternal(hardwareMap.appContext, Configuration.getFileName(), telemetry);
+//            FileSerialization.setClipboard(hardwareMap.appContext, s);
         }
         telemetry.addData("Time", "time = %f", time);
         telemetry.addData("DEBUG", debugMessage);
         telemetry.update();
-
-//        while (this.getRuntime() < 99999) {
-//            System.out.println();
-//        }
     }
 
     private static GoldPositions calculateLastKnown(ArrayList<GoldPositions> positionStream) {
