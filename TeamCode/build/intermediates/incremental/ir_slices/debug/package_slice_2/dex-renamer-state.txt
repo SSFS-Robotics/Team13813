@@ -1,0 +1,4 @@
+#Wed Jan 02 15:06:56 EST 2019
+base.0=/home/koke_cacao/Documents/Koke_Cacao/Java/WorkSpace/ftc_app/TeamCode/build/intermediates/transforms/dexMerger/debug/2
+path.0=classes.dex
+renamed.0=classes.dex
